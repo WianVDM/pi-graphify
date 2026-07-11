@@ -11,6 +11,10 @@ dist/
 .idea/
 *.code-workspace
 
+# User-specific agent context
+AGENTS.local.md
+CLAUDE.local.md
+
 # Environment
 .env
 .env.*
