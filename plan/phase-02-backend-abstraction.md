@@ -38,77 +38,77 @@ Introduce a stable backend interface and coordinator so all Graphify operations 
 
 ### 1. Define shared types
 
-- [ ] Define `GraphifyCapabilities` interface (query, path, explain, affected, add, watch, reflect, mcp, etc.)
-- [ ] Define `GraphifyResult` normalized output shape (stdout, stderr, exitCode, durationMs, backend, feature)
-- [ ] Define `GraphifyBackend` interface with `type`, `version`, `capabilities`, `run`, and optional `close`
-- [ ] Define `GraphifyConfig` shape for backend selection and paths
-- [ ] Define `GraphifyError` codes and constructor shape
+- [x] Define `GraphifyCapabilities` interface (query, path, explain, affected, add, watch, reflect, mcp, etc.)
+- [x] Define `GraphifyResult` normalized output shape (stdout, stderr, exitCode, durationMs, backend, feature)
+- [x] Define `GraphifyBackend` interface with `type`, `version`, `capabilities`, `run`, and optional `close`
+- [x] Define `GraphifyConfig` shape for backend selection and paths
+- [x] Define `GraphifyError` codes and constructor shape
 
 ### 2. Implement `CliBackend`
 
-- [ ] Resolve executable in order: `GRAPHIFY_PATH` env, `graphifyPath` config, `which/where graphify`, common install paths
-- [ ] Implement `run(operation, options)` using `execFile` with configured timeout
-- [ ] Normalize stdout/stderr into `GraphifyResult`
-- [ ] Implement `version` detection via `graphify --version` (fallback to `graphify version`)
-- [ ] Implement capability probing by running `graphify <cmd> --help` for each feature
-- [ ] Cache `version` and `capabilities` after first detection
-- [ ] Implement `close()` as a no-op for CLI
-- [ ] Never construct shell strings; validate all paths
+- [x] Resolve executable in order: `GRAPHIFY_PATH` env, `graphifyPath` config, `which/where graphify`, common install paths
+- [x] Implement `run(operation, options)` using `execFile` with configured timeout
+- [x] Normalize stdout/stderr into `GraphifyResult`
+- [x] Implement `version` detection via `graphify --version` (fallback to `graphify version`)
+- [x] Implement capability probing by running `graphify <cmd> --help` for each feature
+- [x] Cache `version` and `capabilities` after first detection
+- [x] Implement `close()` as a no-op for CLI
+- [x] Never construct shell strings; validate all paths
 
 ### 3. Implement version and capability detection
 
-- [ ] Define `MIN_SUPPORTED_GRAPHIFY` constant (e.g., `2.100.0` — exact value to be validated against real CLI)
-- [ ] Parse semver-style version strings defensively
-- [ ] Handle unknown version by entering best-effort mode
-- [ ] Implement capability matrix: min-version gate + runtime probe
-- [ ] Map `graphify <cmd> --help` output to capability booleans
+- [x] Define `MIN_SUPPORTED_GRAPHIFY` constant (e.g., `2.100.0` — exact value to be validated against real CLI)
+- [x] Parse semver-style version strings defensively
+- [x] Handle unknown version by entering best-effort mode
+- [x] Implement capability matrix: min-version gate + runtime probe
+- [x] Map `graphify <cmd> --help` output to capability booleans
 
 ### 4. Implement `GraphifyCoordinator`
 
-- [ ] Load config via `loadConfig()`
-- [ ] Select backend: CLI only for now (MCP placeholder for Phase 6)
-- [ ] Initialize backend once per session and detect version/capabilities
-- [ ] Implement `supports(feature)` method
-- [ ] Implement typed coordinator methods: `status(cwd)`, `build(opts)`, `query(opts)`, `path(opts)`, `explain(opts)`, `affected(opts)`, `version()`
-- [ ] Map backend results/errors to `GraphifyError`
-- [ ] Implement `close()` lifecycle that delegates to backend
-- [ ] Handle missing Graphify by disabling all features and logging a typed error
+- [x] Load config via `loadConfig()`
+- [x] Select backend: CLI only for now (MCP placeholder for Phase 6)
+- [x] Initialize backend once per session and detect version/capabilities
+- [x] Implement `supports(feature)` method
+- [x] Implement typed coordinator methods: `status(cwd)`, `build(opts)`, `query(opts)`, `path(opts)`, `explain(opts)`, `affected(opts)`, `version()`
+- [x] Map backend results/errors to `GraphifyError`
+- [x] Implement `close()` lifecycle that delegates to backend
+- [x] Handle missing Graphify by disabling all features and logging a typed error
 
 ### 5. Implement `GraphifyError`
 
-- [ ] Define error codes: `MISSING`, `VERSION`, `BUILD`, `QUERY`, `TIMEOUT`, `MCP`, `UNKNOWN`
-- [ ] Include `userMessage`, `code`, and `details` fields
-- [ ] Map CLI exit codes and stderr to the right error code
-- [ ] Provide actionable user messages (e.g., install command, update command)
+- [x] Define error codes: `MISSING`, `VERSION`, `BUILD`, `QUERY`, `TIMEOUT`, `MCP`, `UNKNOWN`
+- [x] Include `userMessage`, `code`, and `details` fields
+- [x] Map CLI exit codes and stderr to the right error code
+- [x] Provide actionable user messages (e.g., install command, update command)
 
 ### 6. Refactor existing code
 
-- [ ] Move CLI execution logic from `src/graphify.ts` into `CliBackend`
-- [ ] Keep `graphifyStatus(cwd)` and `buildGraphifyHint(graphPath)` in `src/graphify.ts` but route status through coordinator
-- [ ] Update `src/tools/status.ts` to receive and use the coordinator
-- [ ] Update `extensions/index.ts` to:
+- [x] Move CLI execution logic from `src/graphify.ts` into `CliBackend`
+- [x] Keep `graphifyStatus(cwd)` and `buildGraphifyHint(graphPath)` in `src/graphify.ts` but route status through coordinator
+- [x] Update `src/tools/status.ts` to receive and use the coordinator
+- [x] Update `extensions/index.ts` to:
   - Instantiate `GraphifyCoordinator` on `session_start`
   - Pass coordinator to `registerGraphifyTools`
   - Call `coordinator.close()` on `session_shutdown`
-- [ ] Ensure `/graphify-status` command uses the coordinator
+- [x] Ensure `/graphify-status` command uses the coordinator
 
 ### 7. Verification
 
-- [ ] `npm run typecheck` passes
-- [ ] `npm run lint` passes
-- [ ] Extension loads without errors when Graphify is present
-- [ ] Extension degrades gracefully when Graphify is missing
-- [ ] `graphify_status` tool still returns correct graph existence
-- [ ] `/graphify-status` command still works
+- [x] `npm run typecheck` passes
+- [x] `npm run lint` passes
+- [ ] Extension loads without errors when Graphify is present (pending live session test)
+- [ ] Extension degrades gracefully when Graphify is missing (pending live session test)
+- [ ] `graphify_status` tool still returns correct graph existence (pending live session test)
+- [ ] `/graphify-status` command still works (pending live session test)
 
 ## Completion criteria
 
-- [ ] `GraphifyBackend` interface is stable and typed
-- [ ] `CliBackend` can execute any Graphify subcommand and return normalized results
-- [ ] `GraphifyCoordinator` selects backend, detects version, and builds capabilities
-- [ ] `graphify_status` tool and `/graphify-status` command use the coordinator
-- [ ] Extension still type-checks and lints cleanly
-- [ ] Missing Graphify is handled gracefully without crashing the session
+- [x] `GraphifyBackend` interface is stable and typed
+- [x] `CliBackend` can execute any Graphify subcommand and return normalized results
+- [x] `GraphifyCoordinator` selects backend, detects version, and builds capabilities
+- [x] `graphify_status` tool and `/graphify-status` command use the coordinator
+- [x] Extension still type-checks and lints cleanly
+- [ ] Missing Graphify is handled gracefully without crashing the session (pending live session test)
 
 ## Decisions
 

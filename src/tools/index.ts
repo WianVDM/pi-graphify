@@ -3,9 +3,10 @@
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import type { GraphifyConfig } from "../config.js";
 import { registerStatusTool } from "./status.js";
 
-export function registerGraphifyTools(pi: ExtensionAPI, config: GraphifyConfig): void {
-  registerStatusTool(pi, config);
+export type CoordinatorProvider = () => import("../coordinator.js").GraphifyCoordinator | null;
+
+export function registerGraphifyTools(pi: ExtensionAPI, getCoordinator: CoordinatorProvider): void {
+  registerStatusTool(pi, getCoordinator);
 }

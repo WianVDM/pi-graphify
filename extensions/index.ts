@@ -9,23 +9,54 @@
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { loadConfig } from "../src/config.js";
+import { GraphifyCoordinator } from "../src/coordinator.js";
 import { buildGraphifyHint, graphifyStatus } from "../src/graphify.js";
 import { registerGraphifyTools } from "../src/tools/index.js";
 
 export default function (pi: ExtensionAPI) {
-  const config = loadConfig();
+  // Coordinator is created per session and shared by tools and commands.
+  let coordinator: GraphifyCoordinator | null = null;
+  const getCoordinator = () => coordinator;
 
-  // ── 1. Notify and inject context when a graph is present ──────────
+  // ── 1. Register tools and commands synchronously ──────────────────
+  registerGraphifyTools(pi, getCoordinator);
+
+  pi.registerCommand("graphify-status", {
+    description: "Show Graphify graph status for the current project",
+    handler: async (_args, ctx) => {
+      const current = getCoordinator();
+      if (!current) {
+        ctx.ui.notify("Graphify is not initialized.", "warning");
+        return;
+      }
+
+      const status = await current.status({ cwd: ctx.cwd });
+      if (status.hasGraph && status.graphPath) {
+        ctx.ui.notify(`Graphify graph ready: ${status.graphPath}`, "info");
+      } else {
+        ctx.ui.notify("No Graphify graph found. Run /graphify-build to create one.", "warning");
+      }
+    },
+  });
+
+  // ── 2. Initialize coordinator per session ─────────────────────────
   pi.on("session_start", async (_event, ctx) => {
-    const status = await graphifyStatus(ctx.cwd);
+    coordinator = new GraphifyCoordinator({ cwd: ctx.cwd });
+    await coordinator.initialize();
+
+    const status = await coordinator.status({ cwd: ctx.cwd });
     if (status.hasGraph && status.graphPath) {
       ctx.ui.notify(`Graphify graph ready: ${status.graphPath}`, "info");
     }
+
+    for (const warning of coordinator.warnings) {
+      ctx.ui.notify(warning, "warning");
+    }
   });
 
+  // ── 3. Inject context hint when a graph is present ────────────────
   pi.on("before_agent_start", async (event, ctx) => {
-    const status = await graphifyStatus(ctx.cwd);
+    const status = graphifyStatus(ctx.cwd);
     if (!status.hasGraph || !status.graphPath) {
       return;
     }
@@ -36,19 +67,11 @@ export default function (pi: ExtensionAPI) {
     };
   });
 
-  // ── 2. Register custom tools the LLM can call ─────────────────────
-  registerGraphifyTools(pi, config);
-
-  // ── 3. Register slash commands ────────────────────────────────────
-  pi.registerCommand("graphify-status", {
-    description: "Show Graphify graph status for the current project",
-    handler: async (_args, ctx) => {
-      const status = await graphifyStatus(ctx.cwd);
-      if (status.hasGraph && status.graphPath) {
-        ctx.ui.notify(`Graphify graph ready: ${status.graphPath}`, "info");
-      } else {
-        ctx.ui.notify("No Graphify graph found. Run /graphify-build to create one.", "warning");
-      }
-    },
+  // ── 4. Clean up coordinator on shutdown ─────────────────────────
+  pi.on("session_shutdown", async () => {
+    if (coordinator) {
+      await coordinator.close();
+      coordinator = null;
+    }
   });
 }

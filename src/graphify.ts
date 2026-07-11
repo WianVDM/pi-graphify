@@ -1,72 +1,23 @@
 /**
- * Graphify CLI helpers
+ * High-level Graphify helpers used by the extension and tools.
+ *
+ * CLI execution has moved to `src/backends/cli.ts`. This module retains:
+ *   - graph existence checks
+ *   - system-prompt hint construction
+ *   - result formatting utilities
  */
 
-import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type { GraphifyConfig } from "./config.js";
-
-export interface GraphifyResult {
-  stdout: string;
-  stderr: string;
-  exitCode: number;
-}
+import type { GraphifyResult } from "./backends/types.js";
 
 export interface GraphStatus {
   hasGraph: boolean;
   graphPath?: string;
-  error?: string;
-}
-
-/** Best-effort resolve of the graphify CLI executable name. */
-export async function findGraphifyCli(): Promise<string> {
-  // Pi shells run with the user's PATH, so the bare command is usually enough.
-  // We try a platform-aware check first; if it fails, we fall back to "graphify".
-  const checkCmd = process.platform === "win32" ? "where" : "which";
-  const shell = process.platform === "win32" ? "cmd.exe" : undefined;
-
-  return new Promise((resolve) => {
-    execFile(checkCmd, ["graphify"], { shell }, (error, stdout) => {
-      if (error || !stdout.trim()) {
-        resolve("graphify");
-        return;
-      }
-      // Use the first match returned by where/which.
-      resolve(stdout.split("\n")[0].trim());
-    });
-  });
-}
-
-/** Run a graphify CLI command with a timeout. */
-export async function runGraphify(
-  args: string[],
-  cwd: string,
-  timeoutMs: number,
-): Promise<GraphifyResult> {
-  const cli = await findGraphifyCli();
-
-  return new Promise((resolve) => {
-    execFile(cli, args, { cwd, timeout: timeoutMs }, (error, stdout, stderr) => {
-      if (error) {
-        resolve({
-          stdout: stdout.trim(),
-          stderr: stderr.trim() || error.message,
-          exitCode: typeof error.code === "number" ? error.code : 1,
-        });
-        return;
-      }
-      resolve({
-        stdout: stdout.trim(),
-        stderr: stderr.trim(),
-        exitCode: 0,
-      });
-    });
-  });
 }
 
 /** Check whether a graph exists for the given project directory. */
-export async function graphifyStatus(cwd: string): Promise<GraphStatus> {
+export function graphifyStatus(cwd: string): GraphStatus {
   const graphPath = join(cwd, "graphify-out", "graph.json");
 
   if (!existsSync(graphPath)) {
@@ -94,5 +45,3 @@ export function formatResult(result: GraphifyResult): string {
   }
   return `graphify exited with code ${result.exitCode}\n${result.stderr || result.stdout}`.trim();
 }
-
-export type { GraphifyConfig };
