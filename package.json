@@ -1,13 +1,13 @@
 {
-  "name": "pi-graphify",
-  "version": "1.0.0",
+  "name": "@wianvdm/pi-graphify",
+  "version": "0.1.0",
   "description": "Graphify knowledge graph integration for Pi coding agent",
   "type": "module",
   "license": "MIT",
   "author": "WIAN <WIANVDM4@GMAIL.COM>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/WianVDM/pi-graphify"
+    "url": "git+https://github.com/WianVDM/pi-graphify.git"
   },
   "keywords": [
     "pi-package",
