@@ -10,8 +10,7 @@ export function registerStatusTool(pi: ExtensionAPI, getCoordinator: Coordinator
   pi.registerTool({
     name: "graphify_status",
     label: "Graphify Status",
-    description:
-      "Check whether a Graphify knowledge graph exists for the current project and whether the graphify CLI is available.",
+    description: "Check whether a Graphify knowledge graph exists for the current project.",
     parameters: Type.Object({}),
     async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
       const coordinator = getCoordinator();
@@ -34,22 +33,27 @@ export function registerStatusTool(pi: ExtensionAPI, getCoordinator: Coordinator
       };
 
       if (!status.hasGraph) {
+        const cliNote = status.backendVersion ? "" : " The Graphify CLI was not detected on PATH.";
         return {
           content: [
             {
               type: "text",
-              text: "No Graphify graph found. Run /graphify-build to build one.",
+              text: `No Graphify graph found. Run /graphify-build to build one.${cliNote}`,
             },
           ],
           details,
         };
       }
 
+      const graphText = status.backendVersion
+        ? `Graphify graph is available at ${status.graphPath}.`
+        : `Graphify graph is available at ${status.graphPath}, but the Graphify CLI was not detected on PATH.`;
+
       return {
         content: [
           {
             type: "text",
-            text: `Graphify graph is available at ${status.graphPath}.`,
+            text: graphText,
           },
         ],
         details: {

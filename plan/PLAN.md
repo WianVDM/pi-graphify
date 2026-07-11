@@ -4,11 +4,11 @@ Single source of truth for the phased development of `pi-graphify`. This documen
 
 ## Current status
 
-- **Active phase:** 2 — Backend abstraction
-- **Last completed:** Phase 1 — Foundation
+- **Active phase:** 3 — Core tools
+- **Last completed:** Phase 2 — Backend abstraction
 - **Last updated:** 2026-07-11
-- **Next action:** Run Phase 2 in a live Pi session to verify graceful degradation and tool/command behavior
-- **Open questions:** Resolved — see [phase-02-backend-abstraction.md](phase-02-backend-abstraction.md) decisions
+- **Next action:** Begin Phase 3 implementation (graphify_build, graphify_query, graphify_path, graphify_explain, graphify_affected)
+- **Open questions:** None
 
 ## Roadmap
 

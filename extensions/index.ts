@@ -49,6 +49,13 @@ export default function (pi: ExtensionAPI) {
       ctx.ui.notify(`Graphify graph ready: ${status.graphPath}`, "info");
     }
 
+    if (coordinator.version === null) {
+      ctx.ui.notify(
+        "Graphify CLI was not detected on PATH. Install Graphify to use build, query, and other graph tools.",
+        "warning",
+      );
+    }
+
     for (const warning of coordinator.warnings) {
       ctx.ui.notify(warning, "warning");
     }

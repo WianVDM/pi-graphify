@@ -1,6 +1,6 @@
 # Phase 2 — Backend abstraction
 
-**Status:** 🔄 Active  
+**Status:** ✅ Complete  
 **Plan pass:** 4
 
 ## Goal
@@ -96,10 +96,23 @@ Introduce a stable backend interface and coordinator so all Graphify operations 
 
 - [x] `npm run typecheck` passes
 - [x] `npm run lint` passes
-- [ ] Extension loads without errors when Graphify is present (pending live session test)
-- [ ] Extension degrades gracefully when Graphify is missing (pending live session test)
-- [ ] `graphify_status` tool still returns correct graph existence (pending live session test)
-- [ ] `/graphify-status` command still works (pending live session test)
+- [x] Extension loads without errors when Graphify is missing (verified live session)
+- [x] Extension degrades gracefully when Graphify is missing (verified live session)
+- [x] `graphify_status` tool returns accurate results (verified live session)
+- [x] `/graphify-status` command works (verified live session)
+- [x] No errors on session shutdown / `/new` (verified live session)
+- [x] No orphaned processes after session ends (verified via `Get-Process *graphify*`)
+
+## Issues found during testing
+
+1. **Misleading `graphify_status` tool description** ✅ Fixed
+   - The description said the tool checks "whether the graphify CLI is available," but the tool output only reported graph existence.
+   - This caused the LLM to incorrectly report that the CLI was available when it was not on PATH.
+   - **Fix:** Updated the tool description to only mention graph existence, and added CLI availability to the text output when `backendVersion` is `null`.
+
+2. **Missing Graphify warning not shown at session start** ✅ Fixed
+   - When Graphify is not installed, `CliBackend` reports `version: null` but does not throw, so the coordinator had no warning to surface.
+   - **Fix:** Added a warning in `session_start` when `coordinator.version` is `null`.
 
 ## Completion criteria
 
@@ -108,7 +121,7 @@ Introduce a stable backend interface and coordinator so all Graphify operations 
 - [x] `GraphifyCoordinator` selects backend, detects version, and builds capabilities
 - [x] `graphify_status` tool and `/graphify-status` command use the coordinator
 - [x] Extension still type-checks and lints cleanly
-- [ ] Missing Graphify is handled gracefully without crashing the session (pending live session test)
+- [x] Missing Graphify is handled gracefully and surfaced to the user without crashing the session
 
 ## Decisions
 
