@@ -1,18 +1,1 @@
-{
-  "$schema": "https://biomejs.dev/schemas/2.4.14/schema.json",
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineWidth": 100
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true
-    }
-  },
-  "files": {
-    "includes": ["**", "!**/node_modules", "!**/dist", "!**/package-lock.json"]
-  }
-}
+ewogICIkc2NoZW1hIjogImh0dHBzOi8vYmlvbWVqcy5kZXYvc2NoZW1hcy8yLjQuMTQvc2NoZW1hLmpzb24iLAogICJmb3JtYXR0ZXIiOiB7CiAgICAiZW5hYmxlZCI6IHRydWUsCiAgICAiaW5kZW50U3R5bGUiOiAic3BhY2UiLAogICAgImluZGVudFdpZHRoIjogMiwKICAgICJsaW5lV2lkdGgiOiAxMDAKICB9LAogICJsaW50ZXIiOiB7CiAgICAiZW5hYmxlZCI6IHRydWUsCiAgICAicnVsZXMiOiB7CiAgICAgICJyZWNvbW1lbmRlZCI6IHRydWUKICAgIH0KICB9LAogICJmaWxlcyI6IHsKICAgICJpbmNsdWRlcyI6IFsiKioiLCAiISovbm9kZV9tb2R1bGVzIiwgIiEqL2Rpc3QiLCAiISovcGFja2FnZS1sb2NrLmpzb24iLCAiISovLnBpIl0KICB9Cn0K
