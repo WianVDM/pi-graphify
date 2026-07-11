@@ -7,7 +7,7 @@ Single source of truth for the phased development of `pi-graphify`. This documen
 - **Active phase:** 3 — Core tools
 - **Last completed:** Phase 2 — Backend abstraction
 - **Last updated:** 2026-07-11
-- **Next action:** Begin Phase 3 implementation (graphify_build, graphify_query, graphify_path, graphify_explain, graphify_affected)
+- **Next action:** Implement Phase 3 core tools (build, query, path, explain, affected, version)
 - **Open questions:** None
 
 ## Roadmap

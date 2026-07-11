@@ -1,7 +1,7 @@
 # Phase 7 — Ecosystem polish
 
 **Status:** ⏳ Pending  
-**Plan pass:** 2
+**Plan pass:** 3
 
 ## Goal
 
@@ -48,6 +48,20 @@ Integrate with the broader Pi extension ecosystem and improve observability, dia
 - Test Hermes memory integration only when the extension is present; verify graceful degradation when absent.
 - Test telemetry output is local and contains no sensitive paths.
 - Test diagnostics tool returns accurate version and capability info.
+
+## Task breakdown
+
+- [ ] Design memory bridge for persisting graph discoveries to Hermes memory
+- [ ] Implement `src/memory.ts` with optional Hermes integration
+- [ ] Implement `src/telemetry.ts` for local-only logging
+- [ ] Implement `graphify_diagnostics` tool and `/graphify-diagnostics` command
+- [ ] Improve error messages and add actionable guidance
+- [ ] Add update notification helpers for Graphify and pi-graphify
+- [ ] Implement performance limits (result size caps, timeouts)
+- [ ] Ensure optional integrations degrade gracefully when not installed
+- [ ] Test Hermes memory integration when available
+- [ ] Test telemetry output contains no sensitive data
+- [ ] Verify `npm run typecheck` and `npm run lint` pass
 
 ## Completion criteria
 

@@ -1,7 +1,7 @@
 # Phase 4 — Commands
 
 **Status:** ⏳ Pending  
-**Plan pass:** 2
+**Plan pass:** 3
 
 ## Goal
 
@@ -37,6 +37,22 @@ Add user-facing slash commands for every core tool so interactive users can invo
 - `src/commands/version.ts`
 - `src/commands/index.ts` registration helper
 - Updated `extensions/index.ts`
+
+## Task breakdown
+
+- [ ] Implement `/graphify-build` command that calls `coordinator.build()`
+- [ ] Implement `/graphify-query` command that calls `coordinator.query()`
+- [ ] Implement `/graphify-path` command that calls `coordinator.path()`
+- [ ] Implement `/graphify-explain` command that calls `coordinator.explain()`
+- [ ] Implement `/graphify-affected` command that calls `coordinator.affected()`
+- [ ] Implement `/graphify-version` command that calls `coordinator.getVersion()`
+- [ ] Upgrade `/graphify-status` command to use the coordinator
+- [ ] Add command argument parsing helpers
+- [ ] Validate arguments and show usage hints on invalid input
+- [ ] Ensure each command produces clear, actionable UI output
+- [ ] Register all commands in `extensions/index.ts`
+- [ ] Test each command independently with a mocked coordinator
+- [ ] Verify `npm run typecheck` and `npm run lint` pass
 
 ## Completion criteria
 

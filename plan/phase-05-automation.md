@@ -1,7 +1,7 @@
 # Phase 5 — Automation
 
 **Status:** ⏳ Pending  
-**Plan pass:** 2
+**Plan pass:** 3
 
 ## Goal
 
@@ -30,6 +30,21 @@ Reduce manual intervention by watching source files, detecting stale graphs, and
 - Updated `extensions/index.ts` event handlers
 - Auto-hint logic in `before_agent_start`
 - Documentation for optional git hook setup
+
+## Task breakdown
+
+- [ ] Implement `src/watcher.ts` with chokidar-based file watching
+- [ ] Add ignore patterns for `node_modules/`, `.git/`, `graphify-out/`, and other non-source directories
+- [ ] Implement debounced change event handling
+- [ ] Integrate watcher start into `extensions/index.ts` `session_start`
+- [ ] Implement incremental code-only rebuild calls via `coordinator.build()`
+- [ ] Implement staleness detection for `graphify-out/graph.json`
+- [ ] Add stale-graph warnings to `before_agent_start` auto-hints
+- [ ] Add config options: `autoWatch`, `autoHint`, `autoRebuildCodeOnly`
+- [ ] Stop watcher cleanly on `session_shutdown`
+- [ ] Add documentation for optional git hook setup
+- [ ] Test watcher with mocked filesystem events
+- [ ] Verify `npm run typecheck` and `npm run lint` pass
 
 ## Completion criteria
 

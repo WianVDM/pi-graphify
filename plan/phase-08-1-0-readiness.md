@@ -1,7 +1,7 @@
 # Phase 8 — 1.0 readiness
 
 **Status:** ⏳ Pending  
-**Plan pass:** 2
+**Plan pass:** 3
 
 ## Goal
 
@@ -32,6 +32,22 @@ Polish the package for a stable release: tests, documentation, security review, 
 - Stable config schema
 - Passing CI on every push/PR
 - Published `1.0.0` release on GitHub and npm
+
+## Task breakdown
+
+- [ ] Write unit tests for `GraphifyCoordinator` and backend selection logic
+- [ ] Write unit tests for `CliBackend` and `McpBackend`
+- [ ] Write tests for all core tools using mocked backends
+- [ ] Write integration tests against a real Graphify CLI in a controlled project
+- [ ] Write comprehensive `README.md` with installation, usage, and configuration
+- [ ] Finalize `AGENTS.md` and other contributor docs
+- [ ] Perform security review (path validation, no shell injection, output sanitization)
+- [ ] Stabilize and validate config schema
+- [ ] Add `fallow` to CI checks
+- [ ] Dry-run `npm publish` to verify package contents
+- [ ] Cut `1.0.0` release via release-please
+- [ ] Prepare pi.dev/packages listing
+- [ ] Verify CI passes (typecheck, lint, audit, fallow, tests)
 
 ## Completion criteria
 

@@ -1,7 +1,7 @@
 # Phase 6 — Advanced features
 
 **Status:** ⏳ Pending  
-**Plan pass:** 2
+**Plan pass:** 3
 
 ## Goal
 
@@ -34,6 +34,21 @@ Add the MCP backend and advanced Graphify operations that require deeper integra
 - Corresponding commands in `src/commands/`
 - Read-interception logic in `extensions/index.ts` (if implemented)
 - Updated backend selection logic in coordinator
+
+## Task breakdown
+
+- [ ] Implement `McpBackend` in `src/backends/mcp.ts` (spawn `graphify --mcp`, JSON-RPC client)
+- [ ] Implement MCP tool listing and invocation
+- [ ] Update `GraphifyCoordinator` to auto-select MCP when available and fall back to CLI
+- [ ] Add config option for backend preference (`auto`, `cli`, `mcp`)
+- [ ] Implement `graphify_add` tool and `/graphify-add` command
+- [ ] Implement `graphify_watch` tool and `/graphify-watch` command
+- [ ] Implement `graphify_reflect` tool and `/graphify-reflect` command
+- [ ] Close MCP process cleanly on `session_shutdown`
+- [ ] Implement optional read interception for graph-first queries (gated by config)
+- [ ] Test MCP lifecycle (start, tool call, error, shutdown)
+- [ ] Test coordinator fallback from MCP to CLI
+- [ ] Verify `npm run typecheck` and `npm run lint` pass
 
 ## Completion criteria
 
