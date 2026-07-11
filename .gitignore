@@ -1,0 +1,33 @@
+node_modules/
+dist/
+*.tgz
+.DS_Store
+.pi-init.md
+
+# Agentic / IDE
+.agents/
+.fallow/
+.vscode/
+.idea/
+*.code-workspace
+
+# Environment
+.env
+.env.*
+
+# Logs and temp files
+*.log
+logs/
+.tmp/
+tmp/
+
+# Test and coverage artifacts
+coverage/
+test-output/
+*.tsbuildinfo
+
+# Local graphify outputs during testing
+graphify-out/
+
+# Pi local config
+.pi/
