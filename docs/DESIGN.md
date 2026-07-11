@@ -7,9 +7,9 @@
 The design is intentionally ecosystem-aware: it works alongside memory extensions like `pi-hermes-memory`, code intelligence extensions like `pi-fallow`, and any other Pi package without duplicating their responsibilities.
 
 For deeper detail, see:
-- `docs/ARCHITECTURE.md` — backend abstraction, component design, and data flow
-- `docs/ECOSYSTEM.md` — integration with other Pi extensions
-- `docs/VERSIONING.md` — Graphify dependency and compatibility strategy
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — backend abstraction, component design, and data flow
+- [docs/ECOSYSTEM.md](docs/ECOSYSTEM.md) — integration with other Pi extensions
+- [docs/VERSIONING.md](docs/VERSIONING.md) — Graphify dependency and compatibility strategy
 
 ---
 
@@ -122,7 +122,7 @@ The experience should feel similar to how `pi-hermes-memory` makes persistent me
 
 ## Architecture
 
-See `docs/ARCHITECTURE.md` for the full component design.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full component design.
 
 At a high level, the extension is layered:
 
@@ -154,7 +154,7 @@ All Graphify operations go through the coordinator, which picks the backend, che
 
 ## Graphify dependency
 
-See `docs/VERSIONING.md` for the detailed compatibility strategy.
+See [docs/VERSIONING.md](docs/VERSIONING.md) for the detailed compatibility strategy.
 
 ### Supported range
 
@@ -188,19 +188,19 @@ The extension never auto-updates Graphify. It can:
 - Show the exact update command for the detected installation method.
 - Let the agent or user run the update via a tool/command if they choose.
 
-For the hybrid version-detection strategy (hardcoded minimum + runtime capability probes), see `docs/VERSIONING.md`.
+For the hybrid version-detection strategy (hardcoded minimum + runtime capability probes), see [docs/VERSIONING.md](docs/VERSIONING.md).
 
 ---
 
 ## Ecosystem integration
 
-See `docs/ECOSYSTEM.md` for detailed integration points.
+See [docs/ECOSYSTEM.md](docs/ECOSYSTEM.md) for detailed integration points.
 
 ### With `pi-hermes-memory`
 
 Complementary. Graphify provides project structure context; Hermes provides durable agent/user memory. The extension may write durable lessons to Hermes memory when graph queries produce reusable insights or corrections.
 
-This integration is **not part of the initial implementation**. It will be added later via the integration hook architecture described in `docs/ARCHITECTURE.md`.
+This integration is **not part of the initial implementation**. It will be added later via the integration hook architecture described in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ### With `pi-fallow`
 

@@ -2,7 +2,7 @@
 
 `pi-graphify` is designed to live in a Pi session alongside other extensions. **Direct third-party integrations are not the main focus of the initial implementation**, but the architecture is intentionally open so that integrations can be added later by us or by other extension authors.
 
-This document explains the design philosophy and the integration points that are planned for the future. For the technical hook design, see `docs/ARCHITECTURE.md`.
+This document explains the design philosophy and the integration points that are planned for the future. For the technical hook design, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ---
 
@@ -19,7 +19,7 @@ This document explains the design philosophy and the integration points that are
 
 ### Status
 
-This integration is **planned but not part of the initial implementation**. The hook architecture in `docs/ARCHITECTURE.md` makes it straightforward to add later without coupling the core extension to Hermes.
+This integration is **planned but not part of the initial implementation**. The hook architecture in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) makes it straightforward to add later without coupling the core extension to Hermes.
 
 ### Relationship
 
