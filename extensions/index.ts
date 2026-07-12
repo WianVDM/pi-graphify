@@ -4,7 +4,7 @@
  * Brings Graphify knowledge graph capabilities into Pi sessions:
  *   - Detects existing graphify-out/graph.json in the project
  *   - Registers LLM-callable tools (graphify_status, graphify_query, ...)
- *   - Registers slash commands (/graphify-build, /graphify-status, ...)
+ *   - Registers slash commands (/graphify-status, ...)
  *   - Optionally watches source files for incremental rebuilds
  */
 
@@ -33,7 +33,7 @@ export default function (pi: ExtensionAPI) {
       if (status.hasGraph && status.graphPath) {
         ctx.ui.notify(`Graphify graph ready: ${status.graphPath}`, "info");
       } else {
-        ctx.ui.notify("No Graphify graph found. Run /graphify-build to create one.", "warning");
+        ctx.ui.notify("No Graphify graph found. Build one with `graphify .`.", "warning");
       }
     },
   });

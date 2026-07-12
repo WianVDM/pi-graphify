@@ -38,7 +38,7 @@ export function registerStatusTool(pi: ExtensionAPI, getCoordinator: Coordinator
           content: [
             {
               type: "text",
-              text: `No Graphify graph found. Run /graphify-build to build one.${cliNote}`,
+              text: `No Graphify graph found. Build one with \`graphify .\`.${cliNote}`,
             },
           ],
           details,
