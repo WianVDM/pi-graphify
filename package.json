@@ -4,7 +4,7 @@
   "description": "Graphify knowledge graph integration for Pi coding agent",
   "type": "module",
   "license": "MIT",
-  "author": "WIAN <WIANVDM4@GMAIL.COM>",
+  "author": "Wian <wianvdm4@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/WianVDM/pi-graphify.git"
