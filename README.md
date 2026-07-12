@@ -1,93 +1,79 @@
 # pi-graphify
 
-A production-quality [pi](https://pi.dev) extension for [Graphify](https://github.com/Graphify-Labs/graphify).
+A [Pi](https://pi.dev) extension that brings [Graphify](https://github.com/Graphify-Labs/graphify) knowledge graph capabilities into your agent sessions.
 
-This extension brings Graphify knowledge graph capabilities into your Pi sessions, making it easy to query, explore, and update codebase graphs without leaving the agent.
-
-> ⚠️ **Work in progress** — this package is in early development. The public API, tools, and commands will evolve as the extension matures toward a stable 1.0 release.
-
-## Quick Start
+## Install
 
 ```bash
-# Install from a local path (during development)
+pi install @wwjd/pi-graphify
+```
+
+Or run locally during development:
+
+```bash
 pi install .
-
-# Or run ephemerally without installing
-pi -e .
-
-# Type check
-npm run typecheck
-
-# Lint
-npm run lint
 ```
 
-## What's Included
+## What it does
 
-```
-pi-graphify/
-├── extensions/
-│   └── index.ts          # Extension entry point (tools, commands, events)
-├── src/                   # Core implementation
-├── package.json           # Pi manifest + npm config
-├── tsconfig.json          # TypeScript config (type checking only)
-├── biome.json             # Linter/formatter config
-├── .gitignore
-├── LICENSE
-├── CHANGELOG.md
-├── RELEASE.md             # Versioning and release standards
-├── AGENTS.md              # Agent context / development conventions
-└── README.md
-```
+`pi-graphify` detects the Graphify CLI and a project's `graphify-out/graph.json` graph, then exposes Graphify operations as Pi tools and slash commands. It routes requests through a backend abstraction so the agent can use Graphify without worrying about whether it's talking to the CLI or (in the future) an MCP server.
 
-## Package Structure
+When a graph is present, the extension also injects a lightweight hint into the system prompt so the agent knows it can ask structural codebase questions via the graph.
 
-### Extensions (`extensions/`)
+## Requirements
 
-TypeScript modules that extend pi's behavior with custom tools, slash commands, and event handlers.
+- [Graphify](https://github.com/Graphify-Labs/graphify) must be installed and on your `PATH`.
+- The project must have a generated graph at `graphify-out/graph.json`.
 
-### Source (`src/`)
+## Current commands
 
-Pi-agnostic implementation logic. The `extensions/` layer imports from here and registers everything with Pi.
+| Command | Description |
+|---|---|
+| `/graphify-status` | Check whether a graph exists and whether the Graphify CLI is compatible. |
+
+## Current tools
+
+| Tool | Description |
+|---|---|
+| `graphify_status` | Check graph presence, path, and Graphify CLI compatibility. |
+
+## What's coming
+
+More tools and commands are planned in upcoming phases:
+
+- `/graphify-build` / `graphify_build`
+- `/graphify-query` / `graphify_query`
+- `/graphify-path` / `graphify_path`
+- `/graphify-explain` / `graphify_explain`
+- `/graphify-watch` / `graphify_watch`
+
+See [docs/DESIGN.md](docs/DESIGN.md) for the full roadmap and design principles.
+
+## How it works
+
+1. On session start, the extension detects the installed Graphify version and looks for `graphify-out/graph.json`.
+2. If a graph is found, a hint is added to the agent context.
+3. Tools and commands route through a coordinator that selects the best available backend.
+
+## Status
+
+This extension is in early development. The public API, tools, and commands will evolve as the extension matures toward a stable 1.0 release.
+
+## Documentation
+
+- [Design](docs/DESIGN.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Ecosystem](docs/ECOSYSTEM.md)
+- [Versioning](docs/VERSIONING.md)
+- [Release standards](RELEASE.md)
+- [Agent context](AGENTS.md)
 
 ## Development
 
-### Requirements
-
-- Node.js 22+
-- npm 10+
-- pi CLI
-
-### Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run typecheck` | TypeScript type checking (`tsc --noEmit`) |
-| `npm run lint` | Check lint + formatting (`biome check`) |
-| `npm run lint:fix` | Auto-fix lint + formatting issues |
-| `npm run format` | Format code only |
-
-### Testing the package
-
 ```bash
-# Run ephemerally with no other extensions loaded
-pi -ne -e . --no-session
-
-# Test a specific tool in print mode
-pi -ne -e . --no-session -p "List the available tools."
+npm run typecheck
+npm run lint
 ```
-
-## Publishing
-
-This package is intended for publication to npm so it can be listed on [pi.dev/packages](https://pi.dev/packages). CI/CD workflows for release automation are included under `.github/workflows/`.
-
-See `RELEASE.md` for versioning and release standards.
-
-Before publishing, update:
-
-- `package.json` author and repository fields
-- `README.md` with final usage instructions
-- `CHANGELOG.md` with release notes
 
 ## License
 
