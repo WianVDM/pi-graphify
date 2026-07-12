@@ -63,19 +63,15 @@ After installing, `graphify` should be available on your PATH. If it is not, add
 
 ## Build a graph for testing
 
-Open Pi in a project you want to test, then run:
-
-```text
-/graphify-build
-```
-
-Or use the Graphify CLI directly:
+Phase 3 only adds the tools. The `/graphify-build` command is added in Phase 4, so for now build the graph directly with the Graphify CLI:
 
 ```bash
 graphify .
 ```
 
 This creates a `graphify-out/` directory with `graph.json`, `graph.html`, and `GRAPH_REPORT.md`.
+
+Once Phase 4 is complete, `/graphify-build` will be available as an alternative.
 
 ## Verify the extension with Graphify installed
 
@@ -129,7 +125,7 @@ Or remove the package manually from Pi's package directory if you installed it l
 | `graphify` command not found after install | Ensure the tool bin directory is on your PATH. For `uv tool`, try `uv tool update-shell`. |
 | Pi does not load the extension | Run `pi --version` and confirm the package is listed in `pi packages`. Try `/reload`. |
 | Extension shows old version after changes | Run `pi install .` again, then start a fresh Pi session. |
-| `graphify_status` returns "No Graphify graph found" | Build the graph first with `/graphify-build` or `graphify .`. |
+| `graphify_status` returns "No Graphify graph found" | Build the graph first with `graphify .` (the `/graphify-build` command is coming in Phase 4). |
 
 ## References
 
