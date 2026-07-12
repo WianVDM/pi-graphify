@@ -18,7 +18,7 @@ Implement the LLM-callable tools that expose Graphify’s core operations: build
 - Capability-based tool registration inside `session_start` after coordinator initialization
 - Tool deduplication guard using a `Set<string>` of registered tool names
 - Shared result formatting helpers
-- Tool descriptions tuned for the LLM
+- Tool descriptions, `promptSnippet`, and `promptGuidelines` tuned for the LLM
 
 ## Out of scope
 
@@ -183,7 +183,23 @@ Use `typebox` `Type.Object` with descriptions on each field.
 - Verify duplicate registration is prevented when `session_start` is triggered again.
 - Verify tools handle `GraphifyError` gracefully and return structured error content.
 - The coordinator accepts an injected backend so tests can avoid CLI discovery and process spawning.
+- During manual Pi session verification, `graphify_explain` and `graphify_path` were not always invoked by the LLM; it preferred reading source code. This was addressed by adding `promptSnippet`/`promptGuidelines` and strengthening the system prompt hint.
 
 ## Notes
 
 Tool design should mirror the `GraphifyBackend` operations defined in Phase 2. Schemas should be strict enough to guide the LLM but permissive enough for real-world queries.
+
+### Post-completion tuning
+
+After manual verification, the LLM sometimes chose to read source code instead of calling `graphify_explain` or `graphify_path`. To address this, the following tuning was applied without changing the tool contracts:
+
+- Added `promptSnippet` and `promptGuidelines` to every tool so Pi's system prompt can explicitly tell the LLM when to use each tool.
+- Improved `graphify_explain` and `graphify_path` descriptions to emphasize that they operate on graph nodes (functions, files, tools, concepts) rather than raw code.
+- Strengthened the system prompt hint in `src/graphify.ts` with explicit guidance to use `graphify_explain` and `graphify_path` instead of reading source when the subject is a graph node.
+
+### Documentation and messaging fixes
+
+- Added `docs/TESTING.md` to document local extension installation, Graphify CLI installation, and end-to-end verification steps.
+- Removed hardcoded user paths from the extension install instructions in `docs/TESTING.md`.
+- Replaced references to the non-existent `/graphify-build` command with `graphify .` in the `graphify_status` tool and `/graphify-status` command output, since Phase 4 will add the slash command.
+- Excluded `graphify-out/` from Biome linting after generated graph files caused lint failures during testing.

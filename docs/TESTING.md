@@ -65,13 +65,13 @@ After installing, `graphify` should be available on your PATH. If it is not, add
 
 Phase 3 only adds the tools. The `/graphify-build` command is added in Phase 4, so for now build the graph directly with the Graphify CLI.
 
-For a quick code-only graph that does not require an API key or extra dependencies, run:
+The recommended approach for testing `pi-graphify` is a code-only graph. It skips semantic extraction, so it does not require an API key or extra Python dependencies:
 
 ```bash
 graphify . --code-only
 ```
 
-This creates a `graphify-out/` directory with `graph.json`, `graph.html`, and `GRAPH_REPORT.md`. The `--code-only` flag skips semantic extraction and only indexes code files, which is usually enough for testing `pi-graphify`.
+This creates a `graphify-out/` directory with `graph.json`, `graph.html`, and `GRAPH_REPORT.md`. It has been verified to work with the default `uv tool install graphifyy` setup.
 
 If you want semantic extraction (docs, images, etc.), you need the `kimi` backend dependencies. Install them with:
 
