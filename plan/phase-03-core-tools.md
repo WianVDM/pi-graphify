@@ -1,6 +1,6 @@
 # Phase 3 — Core tools
 
-**Status:** 🔄 Active  
+**Status:** ✅ Complete  
 **Plan pass:** 4
 
 ## Goal
@@ -15,7 +15,8 @@ Implement the LLM-callable tools that expose Graphify’s core operations: build
 - `graphify_explain` tool
 - `graphify_affected` tool
 - Tool parameter schemas using typebox
-- Capability-based tool registration (disable tools the backend cannot support)
+- Capability-based tool registration inside `session_start` after coordinator initialization
+- Tool deduplication guard using a `Set<string>` of registered tool names
 - Shared result formatting helpers
 - Tool descriptions tuned for the LLM
 
@@ -42,102 +43,128 @@ Implement the LLM-callable tools that expose Graphify’s core operations: build
 
 ### 1. Shared tool infrastructure
 
-- [ ] Create `src/tools/types.ts` with `ToolContext` and result helper types
-- [ ] Create `src/tools/format.ts` with shared result formatting helpers
-  - [ ] `formatGraphifyResult(result)` returns tool content array
-  - [ ] `formatGraphifyError(error)` returns friendly error text
+- [x] Create `src/tools/types.ts` with `ToolContext` and result helper types
+- [x] Create `src/tools/format.ts` with shared result formatting helpers
+  - [x] `formatGraphifyResult(result)` returns tool content array
+  - [x] `formatGraphifyError(error)` returns friendly error text
 
 ### 2. Tool schemas
 
-- [ ] `graphify_build`: `cwd`, `codeOnly?`, `update?`, `directed?`
-- [ ] `graphify_query`: `cwd`, `question`
-- [ ] `graphify_path`: `cwd`, `source`, `target`
-- [ ] `graphify_explain`: `cwd`, `node`
-- [ ] `graphify_affected`: `cwd`, `files[]`
-- [ ] `graphify_version`: no parameters (or optional `cwd`)
+- [x] `graphify_build`: `cwd`, `codeOnly?`, `update?`, `directed?`
+- [x] `graphify_query`: `cwd`, `question`
+- [x] `graphify_path`: `cwd`, `source`, `target`
+- [x] `graphify_explain`: `cwd`, `node`
+- [x] `graphify_affected`: `cwd`, `files[]`
+- [x] `graphify_version`: no parameters (or optional `cwd`)
 
 Use `typebox` `Type.Object` with descriptions on each field.
 
 ### 3. Implement `graphify_build`
 
-- [ ] File: `src/tools/build.ts`
-- [ ] Validate `cwd` is a string
-- [ ] Call `coordinator.build({ cwd, codeOnly, update, directed })`
-- [ ] Return formatted result or error
-- [ ] Register in `src/tools/index.ts` only when `coordinator.supports('build')`
+- [x] File: `src/tools/build.ts`
+- [x] Validate `cwd` is a string
+- [x] Call `coordinator.build({ cwd, codeOnly, update, directed })`
+- [x] Return formatted result or error
+- [x] Register only when `coordinator.supports('build')` inside `session_start`
 
 ### 4. Implement `graphify_query`
 
-- [ ] File: `src/tools/query.ts`
-- [ ] Validate `question` is non-empty
-- [ ] Call `coordinator.query({ cwd, question })`
-- [ ] Return formatted result or error
-- [ ] Register in `src/tools/index.ts` only when `coordinator.supports('query')`
+- [x] File: `src/tools/query.ts`
+- [x] Validate `question` is non-empty
+- [x] Call `coordinator.query({ cwd, question })`
+- [x] Return formatted result or error
+- [x] Register only when `coordinator.supports('query')` inside `session_start`
 
 ### 5. Implement `graphify_path`
 
-- [ ] File: `src/tools/path.ts`
-- [ ] Validate `source` and `target` are non-empty
-- [ ] Call `coordinator.path({ cwd, source, target })`
-- [ ] Return formatted result or error
-- [ ] Register in `src/tools/index.ts` only when `coordinator.supports('path')`
+- [x] File: `src/tools/path.ts`
+- [x] Validate `source` and `target` are non-empty
+- [x] Call `coordinator.path({ cwd, source, target })`
+- [x] Return formatted result or error
+- [x] Register only when `coordinator.supports('path')` inside `session_start`
 
 ### 6. Implement `graphify_explain`
 
-- [ ] File: `src/tools/explain.ts`
-- [ ] Validate `node` is non-empty
-- [ ] Call `coordinator.explain({ cwd, node })`
-- [ ] Return formatted result or error
-- [ ] Register in `src/tools/index.ts` only when `coordinator.supports('explain')`
+- [x] File: `src/tools/explain.ts`
+- [x] Validate `node` is non-empty
+- [x] Call `coordinator.explain({ cwd, node })`
+- [x] Return formatted result or error
+- [x] Register only when `coordinator.supports('explain')` inside `session_start`
 
 ### 7. Implement `graphify_affected`
 
-- [ ] File: `src/tools/affected.ts`
-- [ ] Validate `files` is a non-empty array of strings
-- [ ] Call `coordinator.affected({ cwd, files })`
-- [ ] Return formatted result or error
-- [ ] Register in `src/tools/index.ts` only when `coordinator.supports('affected')`
+- [x] File: `src/tools/affected.ts`
+- [x] Validate `files` is a non-empty array of strings
+- [x] Call `coordinator.affected({ cwd, files })`
+- [x] Return formatted result or error
+- [x] Register only when `coordinator.supports('affected')` inside `session_start`
 
 ### 8. Implement `graphify_version`
 
-- [ ] File: `src/tools/version.ts`
-- [ ] Call `coordinator.getVersion()`
-- [ ] Return formatted version text or error
-- [ ] Register in `src/tools/index.ts` only when `coordinator.supports('version')`
+- [x] File: `src/tools/version.ts`
+- [x] Call `coordinator.getVersion()`
+- [x] Return formatted version text or error
+- [x] Register only when `coordinator.supports('version')` inside `session_start`
 
 ### 9. Tool registration and capability gating
 
-- [ ] Update `src/tools/index.ts` to register all Phase 3 tools
-- [ ] Add `registerBuildTool`, `registerQueryTool`, `registerPathTool`, `registerExplainTool`, `registerAffectedTool`, `registerVersionTool`
-- [ ] Before registering each tool, check `coordinator.supports(feature)`
-- [ ] If a capability is missing, skip registration so the LLM does not see the tool
+- [x] Update `src/tools/index.ts` to accept a `Set<string>` of registered tool names
+- [x] Add `registerBuildTool`, `registerQueryTool`, `registerPathTool`, `registerExplainTool`, `registerAffectedTool`, `registerVersionTool`
+- [x] Only call `pi.registerTool` when `coordinator.supports(feature)` is true
+- [x] Skip already-registered tool names to prevent duplicate registration if `session_start` fires again
+- [x] Move `registerGraphifyTools` call from extension load time to `session_start` after `coordinator.initialize()`
 
 ### 10. Error handling
 
-- [ ] Catch `GraphifyError` in tool executors
-- [ ] Return user-friendly error text in tool content
-- [ ] Do not throw from tool executors (return structured error content)
+- [x] Catch `GraphifyError` in tool executors
+- [x] Return user-friendly error text in tool content
+- [x] Do not throw from tool executors (return structured error content)
 
 ### 11. Testing
 
-- [ ] Create a mock `GraphifyBackend` for unit tests
-- [ ] Test each tool with the mock backend
-- [ ] Verify tools are not registered when capability is false
-- [ ] Verify tools handle `GraphifyError` gracefully
+- [x] Create a mock `GraphifyBackend` for unit tests
+- [x] Test each tool with the mock backend
+- [x] Verify tools are registered only when the backend reports the matching capability
+- [x] Verify tools handle `GraphifyError` gracefully
+- [x] Verify duplicate registration is prevented when `session_start` fires again
 
 ### 12. Verification
 
-- [ ] `npm run typecheck` passes
-- [ ] `npm run lint` passes
-- [ ] All new tools are registered correctly based on backend capabilities
-- [ ] No runtime errors when Graphify is missing (tools simply are not registered)
+- [x] `npm run typecheck` passes
+- [x] `npm run lint` passes
+- [x] All new tools are registered correctly based on backend capabilities
+- [x] No runtime errors when Graphify is missing (no tools are registered)
 
-- [ ] Each tool can be invoked by the LLM
-- [ ] Tools route through `GraphifyCoordinator`
-- [ ] Tools are disabled when backend capabilities are missing
-- [ ] Tool outputs are formatted consistently
-- [ ] Tools respect timeouts and return friendly errors
-- [ ] Extension type-checks and lints cleanly
+- [x] Each tool can be invoked by the LLM when the capability is present
+- [x] Tools route through `GraphifyCoordinator`
+- [x] Tools are not registered when backend capabilities are missing
+- [x] Tool outputs are formatted consistently
+- [x] Tools respect timeouts and return friendly errors (via coordinator/backend)
+- [x] Extension type-checks and lints cleanly
+
+## Decisions
+
+### 1. Capability gating at registration time
+
+**Decision:** Tools are registered only inside `session_start`, after the coordinator has initialized and detected capabilities. Each tool is registered only when `coordinator.supports(feature)` is true. A `Set<string>` tracks registered tool names so repeated `session_start` events do not duplicate registrations.
+
+**Why:** The LLM should not see tools it cannot use. Wasting a tool call on an unsupported feature costs tokens and slows the conversation. Pi's extension API supports `pi.registerTool()` inside `session_start`, and tools registered there are refreshed immediately for the current session without requiring `/reload`. A deduplication guard prevents errors if the session lifecycle fires `session_start` more than once.
+
+**Alternatives considered:**
+- Execution-time gating inside each tool. Rejected because the LLM still sees and may call unsupported tools, wasting tool calls and tokens.
+- Late registration without a deduplication guard. Rejected because `session_start` can fire multiple times per extension instance, risking duplicate tool name errors.
+
+### 2. Test runner
+
+**Decision:** Use Node.js built-in `node:test` runner with `tsx` for TypeScript execution.
+
+**Why:** It avoids a heavy test framework dependency and keeps tests close to the runtime Pi uses. `tsx` is added as a dev dependency to transpile TypeScript test files.
+
+### 3. Mock backend injection
+
+**Decision:** `GraphifyCoordinator` accepts an optional `backend` in its constructor for tests.
+
+**Why:** Tools need a coordinator backed by a mock `GraphifyBackend`. Making the backend injectable keeps production code unchanged while enabling deterministic unit tests.
 
 ## Dependencies
 
@@ -151,9 +178,11 @@ Use `typebox` `Type.Object` with descriptions on each field.
 
 ## Testing notes
 
-- Each tool should be tested with a mocked backend, not the real CLI.
+- Each tool is tested with a mocked backend, not the real CLI.
 - Verify tools are registered only when the backend reports the matching capability.
-- Test error handling and timeout behavior.
+- Verify duplicate registration is prevented when `session_start` is triggered again.
+- Verify tools handle `GraphifyError` gracefully and return structured error content.
+- The coordinator accepts an injected backend so tests can avoid CLI discovery and process spawning.
 
 ## Notes
 
