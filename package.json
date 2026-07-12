@@ -34,7 +34,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "node --test --import tsx src/tools/tools.test.ts",
+    "test": "node --test --import tsx src/tools/tools.test.ts src/extensions/extension-load.test.ts",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
