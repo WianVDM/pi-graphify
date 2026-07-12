@@ -17,10 +17,9 @@ export default function (pi: ExtensionAPI) {
   // Coordinator is created per session and shared by tools and commands.
   let coordinator: GraphifyCoordinator | null = null;
   const getCoordinator = () => coordinator;
+  const registeredToolNames = new Set<string>();
 
-  // ── 1. Register tools and commands synchronously ──────────────────
-  registerGraphifyTools(pi, getCoordinator);
-
+  // ── 1. Register slash commands synchronously ─────────────────────
   pi.registerCommand("graphify-status", {
     description: "Show Graphify graph status for the current project",
     handler: async (_args, ctx) => {
@@ -39,10 +38,15 @@ export default function (pi: ExtensionAPI) {
     },
   });
 
-  // ── 2. Initialize coordinator per session ─────────────────────────
+  // ── 2. Initialize coordinator and register tools per session ───────
+  // Tools are registered inside session_start so we can gate them by the
+  // coordinator's detected capabilities. Registering at load time would mean
+  // the LLM sees tools that may not be supported by the installed Graphify version.
   pi.on("session_start", async (_event, ctx) => {
     coordinator = new GraphifyCoordinator({ cwd: ctx.cwd });
     await coordinator.initialize();
+
+    registerGraphifyTools(pi, getCoordinator, { registeredToolNames });
 
     const status = await coordinator.status({ cwd: ctx.cwd });
     if (status.hasGraph && status.graphPath) {
