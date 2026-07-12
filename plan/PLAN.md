@@ -5,9 +5,9 @@ Single source of truth for the phased development of `pi-graphify`. This documen
 ## Current status
 
 - **Active phase:** 4 — Commands
-- **Last completed:** Phase 3 — Core tools
+- **Last completed:** Phase 4 — Commands (standards pass complete)
 - **Last updated:** 2026-07-12
-- **Next action:** Implement Phase 4 slash commands (pending explicit approval)
+- **Next action:** Start Phase 5 — Automation (file watcher, staleness detection, git hook helper, auto-hints)
 - **Open questions:** None
 
 ## Roadmap
@@ -17,7 +17,7 @@ Single source of truth for the phased development of `pi-graphify`. This documen
 | 1 | [Foundation](phase-01-foundation.md) | ✅ Complete | Set up the package, config, CLI discovery, and first status tool |
 | 2 | [Backend abstraction](phase-02-backend-abstraction.md) | ✅ Complete | Abstract Graphify behind a stable backend interface and coordinator |
 | 3 | [Core tools](phase-03-core-tools.md) | ✅ Complete | Implement query, path, explain, affected, build, version tools with late registration gating |
-| 4 | [Commands](phase-04-commands.md) | 🔄 Active | Add slash commands for every core tool |
+| 4 | [Commands](phase-04-commands.md) | ✅ Complete | Add slash commands for every core tool and a unified `/graphify` menu |
 | 5 | [Automation](phase-05-automation.md) | ⏳ Pending | File watcher, staleness detection, git hook helper, auto-hints |
 | 6 | [Advanced features](phase-06-advanced-features.md) | ⏳ Pending | MCP backend, add, watch, reflect, optional read interception |
 | 7 | [Ecosystem polish](phase-07-ecosystem-polish.md) | ⏳ Pending | Hermes memory integration, telemetry, diagnostics |

@@ -63,7 +63,7 @@ After installing, `graphify` should be available on your PATH. If it is not, add
 
 ## Build a graph for testing
 
-Phase 3 only adds the tools. The `/graphify-build` command is added in Phase 4, so for now build the graph directly with the Graphify CLI.
+You can build the graph with the Graphify CLI directly, or use the `/graphify-build` slash command once the extension is loaded.
 
 The recommended approach for testing `pi-graphify` is a code-only graph. It skips semantic extraction, so it does not require an API key or extra Python dependencies:
 
@@ -85,14 +85,15 @@ Then run the full build:
 graphify .
 ```
 
-Once Phase 4 is complete, `/graphify-build` will be available as an alternative.
+Inside Pi you can also run `/graphify` to open the command menu and select "Build graph", or type `/graphify-build` directly.
 
 ## Verify the extension with Graphify installed
 
 1. Start Pi in a project with a built graph.
 2. You should see a notification: `Graphify graph ready: ...`.
 3. The supported tools should be available to the LLM. You can verify by asking: "What graphify tools are available?" or by checking the system prompt tool list.
-4. Test a tool by asking: "Use the graphify graph to explain how auth works in this codebase."
+4. Test a slash command: type `/graphify` to open the menu, or `/graphify-status` to check graph status.
+5. Test a tool by asking: "Use the graphify graph to explain how auth works in this codebase."
 
 ## Verify the extension without Graphify
 
