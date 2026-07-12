@@ -11,10 +11,10 @@ This guide covers how to install and test the local `pi-graphify` extension, plu
 
 ## Install the local pi-graphify extension
 
-From the project root, run:
+From the project root directory, run:
 
-```powershell
-cd "C:\Users\User\Desktop\pi-graphify"; pi install .
+```bash
+pi install .
 ```
 
 This installs the local package into Pi so the extension is loaded on the next Pi session.
