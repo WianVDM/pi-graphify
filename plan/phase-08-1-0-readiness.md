@@ -25,7 +25,7 @@ Polish the package for a stable release: tests, documentation, security review, 
 
 ## Key deliverables
 
-- Test suite (e.g., `src/**/*.test.ts` or `tests/`)
+- Test suite using Node.js built-in test runner and `tsx`
 - Comprehensive `README.md`
 - Finalized `AGENTS.md`
 - Security review document or checklist
@@ -35,14 +35,29 @@ Polish the package for a stable release: tests, documentation, security review, 
 
 ## Task breakdown
 
-- [ ] Write unit tests for `GraphifyCoordinator` and backend selection logic
-- [ ] Write unit tests for `CliBackend` and `McpBackend`
+- [ ] Write unit tests for `GraphifyCoordinator`
+  - [ ] Backend selection logic
+  - [ ] Capability gating
+  - [ ] Error normalization
+- [ ] Write unit tests for `CliBackend`
+  - [ ] Version detection
+  - [ ] Argument escaping
+  - [ ] Timeout handling
+- [ ] Write unit tests for `McpBackend` (if Phase 6 is complete)
+  - [ ] Process lifecycle
+  - [ ] JSON-RPC request/response handling
 - [ ] Write tests for all core tools using mocked backends
 - [ ] Write integration tests against a real Graphify CLI in a controlled project
 - [ ] Write comprehensive `README.md` with installation, usage, and configuration
 - [ ] Finalize `AGENTS.md` and other contributor docs
-- [ ] Perform security review (path validation, no shell injection, output sanitization)
+- [ ] Perform security review
+  - [ ] Path validation (no traversal)
+  - [ ] No shell injection (`execFile` with argument arrays)
+  - [ ] Output sanitization (Graphify output treated as text, never re-executed)
+  - [ ] Config only loaded from trusted project-local paths
 - [ ] Stabilize and validate config schema
+  - [ ] Add runtime validation for loaded config
+  - [ ] Freeze public config shape
 - [ ] Add `fallow` to CI checks
 - [ ] Dry-run `npm publish` to verify package contents
 - [ ] Cut `1.0.0` release via release-please

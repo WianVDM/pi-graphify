@@ -11,9 +11,9 @@ Add the MCP backend and advanced Graphify operations that require deeper integra
 
 - `McpBackend` implementation (spawn `graphify --mcp`, JSON-RPC client)
 - Backend auto-selection (MCP preferred, CLI fallback)
-- `graphify_add` tool and command
-- `graphify_watch` tool and command
-- `graphify_reflect` tool and command
+- `graphify_add` tool and `/graphify-add` command
+- `graphify_watch` tool and `/graphify-watch` command
+- `graphify_reflect` tool and `/graphify-reflect` command
 - Optional read interception for graph-first queries
 - Per-session MCP lifecycle management
 
@@ -28,24 +28,34 @@ Add the MCP backend and advanced Graphify operations that require deeper integra
 ## Key deliverables
 
 - `src/backends/mcp.ts` — `McpBackend`
-- `src/tools/add.ts`
-- `src/tools/watch.ts`
-- `src/tools/reflect.ts`
+- `src/tools/add.ts`, `src/tools/watch.ts`, `src/tools/reflect.ts`
 - Corresponding commands in `src/commands/`
 - Read-interception logic in `extensions/index.ts` (if implemented)
 - Updated backend selection logic in coordinator
+- Updated `GraphifyConfig` with `backend` preference
 
 ## Task breakdown
 
-- [ ] Implement `McpBackend` in `src/backends/mcp.ts` (spawn `graphify --mcp`, JSON-RPC client)
-- [ ] Implement MCP tool listing and invocation
+- [ ] Implement `McpBackend` in `src/backends/mcp.ts`
+  - [ ] Spawn `graphify --mcp` as a long-lived stdio process
+  - [ ] Implement JSON-RPC client over stdin/stdout
+  - [ ] Implement `run(operation, options)` to call MCP tools
+  - [ ] Implement `close()` to terminate the MCP process cleanly
+- [ ] Add `backend: 'auto' | 'cli' | 'mcp'` to `GraphifyConfig`
 - [ ] Update `GraphifyCoordinator` to auto-select MCP when available and fall back to CLI
-- [ ] Add config option for backend preference (`auto`, `cli`, `mcp`)
+  - [ ] Honor explicit `backend: 'cli'` or `backend: 'mcp'` settings
+  - [ ] Probe MCP when `backend: 'auto'`; fall back on failure
+  - [ ] Expose `backendType` on coordinator state
 - [ ] Implement `graphify_add` tool and `/graphify-add` command
+  - [ ] Validate input paths/URLs before calling `coordinator.add()`
+  - [ ] Show progress or result summary in UI
 - [ ] Implement `graphify_watch` tool and `/graphify-watch` command
+  - [ ] Allow starting and stopping the file watcher from a tool/command
+  - [ ] Reuse the watcher manager from Phase 5
 - [ ] Implement `graphify_reflect` tool and `/graphify-reflect` command
+  - [ ] Accept optional question; call `coordinator.reflect()`
 - [ ] Close MCP process cleanly on `session_shutdown`
-- [ ] Implement optional read interception for graph-first queries (gated by config)
+- [ ] Implement optional read interception for graph-first queries (gated by config, off by default)
 - [ ] Test MCP lifecycle (start, tool call, error, shutdown)
 - [ ] Test coordinator fallback from MCP to CLI
 - [ ] Verify `npm run typecheck` and `npm run lint` pass
@@ -59,10 +69,22 @@ Add the MCP backend and advanced Graphify operations that require deeper integra
 - [ ] Read interception is optional and safe
 - [ ] Extension type-checks and lints cleanly
 
+## Decisions
+
+### 1. MCP is preferred but not required
+
+**Decision:** The coordinator uses MCP when `backend: 'auto'` and the MCP server starts successfully; otherwise it falls back to CLI. Explicit `backend: 'cli'` skips MCP entirely.
+
+**Why:** MCP provides typed, structured responses and avoids spawning a process per call, but it may not be available in all Graphify installations. Auto-fallback keeps the extension robust.
+
+**Alternatives considered:**
+- CLI-only default. Rejected because MCP is the more efficient long-term interface.
+- MCP-only default. Rejected because it would break on older or minimal Graphify installations.
+
 ## Dependencies
 
 - **Phase 2 — Backend abstraction** must be complete; the `GraphifyBackend` interface is the integration point for MCP.
-- **Phase 5 — Automation** is optional but relevant for `watch` tooling.
+- **Phase 5 — Automation** provides the watcher manager reused by the `graphify_watch` tool/command.
 
 ## Risks
 

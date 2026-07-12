@@ -10,7 +10,7 @@ Integrate with the broader Pi extension ecosystem and improve observability, dia
 ## In scope
 
 - Hermes memory integration (persist graph lessons / discoveries)
-- Telemetry and logging (local-only)
+- Local telemetry and logging
 - Diagnostics tools (`graphify_diagnostics`)
 - Better error messages and user guidance
 - Update notification helpers
@@ -32,32 +32,28 @@ Integrate with the broader Pi extension ecosystem and improve observability, dia
 - Improved error UX in `src/errors.ts`
 - Updated documentation
 
-## Dependencies
-
-- **Phase 3 — Core tools** provides the graph operations worth persisting to memory.
-- **Phase 6 — Advanced features** may expose richer integration points.
-
-## Risks
-
-- Hermes memory API may not be stable or may not be installed.
-- Telemetry/logging could leak sensitive data if not carefully designed.
-- Diagnostics tools may expose too much internal state.
-
-## Testing notes
-
-- Test Hermes memory integration only when the extension is present; verify graceful degradation when absent.
-- Test telemetry output is local and contains no sensitive paths.
-- Test diagnostics tool returns accurate version and capability info.
-
 ## Task breakdown
 
 - [ ] Design memory bridge for persisting graph discoveries to Hermes memory
+  - [ ] Define `GraphifyLesson` shape
+  - [ ] Detect Hermes memory availability without hard dependency
 - [ ] Implement `src/memory.ts` with optional Hermes integration
+  - [ ] Provide `saveLesson` helper
+  - [ ] Gracefully degrade when Hermes is absent
 - [ ] Implement `src/telemetry.ts` for local-only logging
+  - [ ] Log operation durations, backend type, and capability state
+  - [ ] Exclude sensitive paths and query content from logs
 - [ ] Implement `graphify_diagnostics` tool and `/graphify-diagnostics` command
+  - [ ] Report installed Graphify version, backend type, capabilities, and graph status
+  - [ ] Report any active warnings from the coordinator
 - [ ] Improve error messages and add actionable guidance
+  - [ ] Add "how to fix" text for common errors (missing CLI, outdated version, missing graph)
 - [ ] Add update notification helpers for Graphify and pi-graphify
-- [ ] Implement performance limits (result size caps, timeouts)
+  - [ ] Check installed version against supported range
+  - [ ] Surface update command when applicable
+- [ ] Implement performance limits
+  - [ ] Cap result size for tool content
+  - [ ] Enforce existing timeouts consistently
 - [ ] Ensure optional integrations degrade gracefully when not installed
 - [ ] Test Hermes memory integration when available
 - [ ] Test telemetry output contains no sensitive data
@@ -70,6 +66,23 @@ Integrate with the broader Pi extension ecosystem and improve observability, dia
 - [ ] Diagnostics tool reports version, capabilities, and backend status
 - [ ] Error messages guide users toward the fix
 - [ ] Extension type-checks and lints cleanly
+
+## Dependencies
+
+- **Phase 3 — Core tools** provides the graph operations worth persisting to memory.
+- **Phase 6 — Advanced features** may expose richer integration points and backend diagnostics.
+
+## Risks
+
+- Hermes memory API may not be stable or may not be installed.
+- Telemetry/logging could leak sensitive data if not carefully designed.
+- Diagnostics tools may expose too much internal state.
+
+## Testing notes
+
+- Test Hermes memory integration only when the extension is present; verify graceful degradation when absent.
+- Test telemetry output is local and contains no sensitive paths.
+- Test diagnostics tool returns accurate version and capability info.
 
 ## Notes
 

@@ -10,11 +10,11 @@ Reduce manual intervention by watching source files, detecting stale graphs, and
 ## In scope
 
 - File watcher using `chokidar`
-- Debounced incremental rebuilds (`graphify --update` with `codeOnly: true`)
+- Debounced incremental rebuilds (`coordinator.build({ update: true, codeOnly: true })`)
 - Staleness detection for `graphify-out/graph.json`
 - Git hook helper instructions
 - Auto-injection of context hints when a graph is present or stale
-- Configurable automation levels (`autoWatch`, `autoHint`, etc.)
+- Configurable automation levels (`autoWatch`, `autoHint`, `autoRebuildCodeOnly`)
 
 ## Out of scope
 
@@ -26,22 +26,33 @@ Reduce manual intervention by watching source files, detecting stale graphs, and
 ## Key deliverables
 
 - `src/watcher.ts` — watcher manager
-- Staleness utilities in `src/graphify.ts` or `src/state.ts`
-- Updated `extensions/index.ts` event handlers
+- `src/state.ts` or state helpers in `src/graphify.ts` for staleness detection
+- Updated `extensions/index.ts` event handlers (`session_start`, `session_shutdown`, `before_agent_start`)
 - Auto-hint logic in `before_agent_start`
 - Documentation for optional git hook setup
 
 ## Task breakdown
 
-- [ ] Implement `src/watcher.ts` with chokidar-based file watching
-- [ ] Add ignore patterns for `node_modules/`, `.git/`, `graphify-out/`, and other non-source directories
-- [ ] Implement debounced change event handling
-- [ ] Integrate watcher start into `extensions/index.ts` `session_start`
-- [ ] Implement incremental code-only rebuild calls via `coordinator.build()`
-- [ ] Implement staleness detection for `graphify-out/graph.json`
-- [ ] Add stale-graph warnings to `before_agent_start` auto-hints
-- [ ] Add config options: `autoWatch`, `autoHint`, `autoRebuildCodeOnly`
-- [ ] Stop watcher cleanly on `session_shutdown`
+- [ ] Implement `src/watcher.ts` with `chokidar`-based file watching
+  - [ ] Accept root, debounce window, ignored patterns, and coordinator provider
+  - [ ] Ignore `node_modules/`, `.git/`, `graphify-out/`, and other non-source directories
+  - [ ] Debounce change events using `setTimeout` / `clearTimeout`
+  - [ ] Call `coordinator.build({ cwd, update: true, codeOnly: true })` on debounced changes
+  - [ ] Stop watching and clear timers on `close()`
+- [ ] Add staleness detection utility
+  - [ ] Compare `graphify-out/graph.json` mtime against source files
+  - [ ] Expose `isGraphStale(cwd, thresholdHours)` helper
+- [ ] Extend `GraphifyConfig` with automation options
+  - [ ] `autoWatch: boolean` (already exists; keep default `false`)
+  - [ ] `autoHint: boolean` (default `true`)
+  - [ ] `autoRebuildCodeOnly: boolean` (default `false`)
+- [ ] Integrate watcher into `extensions/index.ts`
+  - [ ] Start watcher in `session_start` when `config.autoWatch` is true and graph exists
+  - [ ] Stop watcher in `session_shutdown`
+  - [ ] Skip auto-watch if project is untrusted or Graphify is missing
+- [ ] Enhance `before_agent_start` auto-hints
+  - [ ] Inject graph hint when a graph is present
+  - [ ] Append stale-graph warning when the graph is older than the threshold
 - [ ] Add documentation for optional git hook setup
 - [ ] Test watcher with mocked filesystem events
 - [ ] Verify `npm run typecheck` and `npm run lint` pass
@@ -55,10 +66,23 @@ Reduce manual intervention by watching source files, detecting stale graphs, and
 - [ ] Automation is opt-in or conservatively opt-out via config
 - [ ] Extension type-checks and lints cleanly
 
+## Decisions
+
+### 1. Auto-rebuild is opt-in and code-only
+
+**Decision:** The file watcher only runs when `config.autoWatch` is `true`, and it always uses `codeOnly: true` and `update: true`.
+
+**Why:** Full semantic rebuilds are expensive and may consume LLM quota. Code-only updates are safe and fast. Keeping the watcher off by default avoids surprising resource usage.
+
+**Alternatives considered:**
+- Auto-watch on by default. Rejected because it could surprise users on large projects.
+- Full semantic rebuilds on save. Rejected due to cost and latency.
+
 ## Dependencies
 
 - **Phase 2 — Backend abstraction** for `CliBackend` and incremental rebuild support.
-- **Phase 3 — Core tools** is helpful but not strictly required; the watcher can call the coordinator directly.
+- **Phase 3 — Core tools** provides the `graphify_build` tool the watcher can mirror.
+- **Phase 4 — Commands** must be complete so the watcher can be wired into the same extension entry point without conflicting with command registration.
 
 ## Risks
 
