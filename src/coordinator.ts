@@ -37,6 +37,8 @@ export interface GraphifyStatusResult {
 export interface CoordinatorOptions {
   cwd: string;
   config?: GraphifyConfig;
+  /** Optional backend, primarily for tests. */
+  backend?: GraphifyBackend;
 }
 
 export class GraphifyCoordinator {
@@ -49,6 +51,7 @@ export class GraphifyCoordinator {
   constructor(options: CoordinatorOptions) {
     this.cwd = options.cwd;
     this.config = options.config ?? loadConfig();
+    this.backend = options.backend ?? null;
   }
 
   async initialize(): Promise<void> {
@@ -57,11 +60,13 @@ export class GraphifyCoordinator {
     }
 
     try {
-      // Phase 2 only supports CLI backend. MCP is a Phase 6 addition.
-      this.backend = await createCliBackend({
-        cwd: this.cwd,
-        timeoutMs: this.config.queryTimeoutMs,
-      });
+      if (!this.backend) {
+        // Phase 2 only supports CLI backend. MCP is a Phase 6 addition.
+        this.backend = await createCliBackend({
+          cwd: this.cwd,
+          timeoutMs: this.config.queryTimeoutMs,
+        });
+      }
     } catch (error) {
       this.backend = null;
       this._warnings.push(
