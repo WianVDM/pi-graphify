@@ -9,6 +9,11 @@ export function registerAffectedTool(pi: ExtensionAPI, getCoordinator: Coordinat
     name: "graphify_affected",
     label: "Graphify Affected",
     description: "Show the blast radius of changes to the given files or nodes.",
+    promptSnippet: "Show what files, nodes, or concepts depend on the given files or nodes",
+    promptGuidelines: [
+      "Use graphify_affected when the user asks what would break if they change a file or node.",
+      "Use graphify_affected to find downstream dependents of a file or concept before refactoring.",
+    ],
     parameters: Type.Object({
       cwd: Type.String({ description: "Working directory of the project to analyze." }),
       files: Type.Array(Type.String({ minLength: 1 }), {

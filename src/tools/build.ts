@@ -10,6 +10,11 @@ export function registerBuildTool(pi: ExtensionAPI, getCoordinator: CoordinatorP
     label: "Graphify Build",
     description:
       "Build or incrementally update the Graphify knowledge graph for the current project.",
+    promptSnippet: "Build or update the project's Graphify knowledge graph",
+    promptGuidelines: [
+      "Use graphify_build when the user wants to create or update the knowledge graph.",
+      "Use graphify_build when graphify_status reports that no graph exists.",
+    ],
     parameters: Type.Object({
       cwd: Type.String({ description: "Working directory of the project to build the graph for." }),
       codeOnly: Type.Optional(

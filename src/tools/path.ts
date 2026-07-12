@@ -8,7 +8,14 @@ export function registerPathTool(pi: ExtensionAPI, getCoordinator: CoordinatorPr
   pi.registerTool({
     name: "graphify_path",
     label: "Graphify Path",
-    description: "Find the shortest path between two nodes in the Graphify knowledge graph.",
+    description:
+      "Trace the shortest path between two nodes (functions, files, tools, or concepts) in the Graphify knowledge graph.",
+    promptSnippet:
+      "Trace how two functions, files, tools, or concepts are connected in the knowledge graph",
+    promptGuidelines: [
+      "Use graphify_path when the user asks how two concepts, functions, files, tools, or symbols are related.",
+      "Use graphify_path instead of manually tracing code when both source and target are known nodes in the graph.",
+    ],
     parameters: Type.Object({
       cwd: Type.String({ description: "Working directory of the project to search." }),
       source: Type.String({

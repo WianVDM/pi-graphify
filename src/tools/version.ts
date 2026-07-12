@@ -9,6 +9,11 @@ export function registerVersionTool(pi: ExtensionAPI, getCoordinator: Coordinato
     name: "graphify_version",
     label: "Graphify Version",
     description: "Report the installed Graphify version and compatibility status.",
+    promptSnippet: "Report the installed Graphify CLI version and compatibility status",
+    promptGuidelines: [
+      "Use graphify_version when the user asks what version of Graphify is installed.",
+      "Use graphify_version to check whether the installed Graphify version is supported.",
+    ],
     parameters: Type.Object({
       cwd: Type.Optional(
         Type.String({ description: "Optional working directory to check Graphify in." }),

@@ -33,6 +33,8 @@ export function buildGraphifyHint(graphPath: string): string {
     "<graphify-context>",
     `A Graphify knowledge graph is available at ${graphPath}.`,
     "When answering questions about this codebase, prefer querying the graph via the graphify_status, graphify_query, graphify_path, and graphify_explain tools instead of grepping or reading raw files.",
+    "Use graphify_explain to explain a specific function, file, tool, or concept that is a node in the graph.",
+    "Use graphify_path to trace how two functions, files, tools, or concepts are connected in the graph.",
     "Only fall back to raw file reads when the graph lacks the needed detail or when modifying/debugging specific lines.",
     "</graphify-context>",
   ].join("\n");

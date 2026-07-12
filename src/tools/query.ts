@@ -9,6 +9,11 @@ export function registerQueryTool(pi: ExtensionAPI, getCoordinator: CoordinatorP
     name: "graphify_query",
     label: "Graphify Query",
     description: "Ask a natural-language question against the Graphify knowledge graph.",
+    promptSnippet: "Ask a natural-language question about the project's knowledge graph",
+    promptGuidelines: [
+      "Use graphify_query when the user asks a broad question about the codebase.",
+      "Use graphify_query instead of grepping or reading files when a graph is available.",
+    ],
     parameters: Type.Object({
       cwd: Type.String({ description: "Working directory of the project to query." }),
       question: Type.String({

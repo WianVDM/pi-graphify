@@ -11,6 +11,11 @@ export function registerStatusTool(pi: ExtensionAPI, getCoordinator: Coordinator
     name: "graphify_status",
     label: "Graphify Status",
     description: "Check whether a Graphify knowledge graph exists for the current project.",
+    promptSnippet: "Check whether a Graphify knowledge graph exists for the current project",
+    promptGuidelines: [
+      "Use graphify_status when the user asks if a Graphify graph is available.",
+      "Use graphify_status before calling other graphify tools to confirm the graph exists.",
+    ],
     parameters: Type.Object({}),
     async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
       const coordinator = getCoordinator();

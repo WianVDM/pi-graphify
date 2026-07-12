@@ -8,7 +8,13 @@ export function registerExplainTool(pi: ExtensionAPI, getCoordinator: Coordinato
   pi.registerTool({
     name: "graphify_explain",
     label: "Graphify Explain",
-    description: "Explain a node or concept in the Graphify knowledge graph.",
+    description:
+      "Explain how a specific node (function, file, tool, or concept) is connected in the Graphify knowledge graph.",
+    promptSnippet: "Explain a function, file, tool, or concept from the project's knowledge graph",
+    promptGuidelines: [
+      "Use graphify_explain when the user asks what a specific function, file, tool, or concept does.",
+      "Use graphify_explain instead of reading source code when the subject is a node in the knowledge graph.",
+    ],
     parameters: Type.Object({
       cwd: Type.String({ description: "Working directory of the project to explain." }),
       node: Type.String({
