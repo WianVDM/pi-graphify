@@ -181,6 +181,8 @@ export class GraphifyCoordinator {
   }
 }
 
+export type CoordinatorProvider = () => GraphifyCoordinator | null;
+
 /** Convenience factory. */
 export async function createGraphifyCoordinator(
   cwd: string,

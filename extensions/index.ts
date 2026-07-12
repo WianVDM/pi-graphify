@@ -9,6 +9,8 @@
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { registerGraphifyCommands } from "../src/commands/index.js";
+import { registerGraphifyMenuCommand } from "../src/commands/menu.js";
 import { GraphifyCoordinator } from "../src/coordinator.js";
 import { buildGraphifyHint, graphifyStatus } from "../src/graphify.js";
 import { registerGraphifyTools } from "../src/tools/index.js";
@@ -20,23 +22,8 @@ export default function (pi: ExtensionAPI) {
   const registeredToolNames = new Set<string>();
 
   // ── 1. Register slash commands synchronously ─────────────────────
-  pi.registerCommand("graphify-status", {
-    description: "Show Graphify graph status for the current project",
-    handler: async (_args, ctx) => {
-      const current = getCoordinator();
-      if (!current) {
-        ctx.ui.notify("Graphify is not initialized.", "warning");
-        return;
-      }
-
-      const status = await current.status({ cwd: ctx.cwd });
-      if (status.hasGraph && status.graphPath) {
-        ctx.ui.notify(`Graphify graph ready: ${status.graphPath}`, "info");
-      } else {
-        ctx.ui.notify("No Graphify graph found. Build one with `graphify .`.", "warning");
-      }
-    },
-  });
+  registerGraphifyCommands(pi, getCoordinator);
+  registerGraphifyMenuCommand(pi, getCoordinator);
 
   // ── 2. Initialize coordinator and register tools per session ───────
   // Tools are registered inside session_start so we can gate them by the

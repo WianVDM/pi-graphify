@@ -1,6 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { GraphifyCapabilities } from "../backends/types.js";
-import type { GraphifyCoordinator } from "../coordinator.js";
+import type { CoordinatorProvider, GraphifyCoordinator } from "../coordinator.js";
 import { registerAffectedTool } from "./affected.js";
 import { registerBuildTool } from "./build.js";
 import { registerExplainTool } from "./explain.js";
@@ -9,7 +9,7 @@ import { registerQueryTool } from "./query.js";
 import { registerStatusTool } from "./status.js";
 import { registerVersionTool } from "./version.js";
 
-export type CoordinatorProvider = () => GraphifyCoordinator | null;
+export type { CoordinatorProvider } from "../coordinator.js";
 
 export interface RegisterToolsOptions {
   /** Tracks tool names that have already been registered to prevent duplicates. */
