@@ -1,1 +1,21 @@
-ewogICIkc2NoZW1hIjogImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9mYWxsb3ctcnMvZmFsbG93L21haW4vc2NoZW1hLmpzb24iLAogICJlbnRyeSI6IFsiZXh0ZW5zaW9ucy9pbmRleC50cyJdLAogICJpZ25vcmVEZXBlbmRlbmNpZXMiOiBbImNob2tpZGFyIl0sCiAgImhlYWx0aCI6IHsKICAgICJ0aHJlc2hvbGRPdmVycmlkZXMiOiBbCiAgICAgIHsKICAgICAgICAiZmlsZXMiOiBbInNyYy9iYWNrZW5kcy9jbGkudHMiXSwKICAgICAgICAiZnVuY3Rpb25zIjogWyJidWlsZEFyZ3MiXSwKICAgICAgICAibWF4Q3JhcCI6IDYwMCwKICAgICAgICAicmVhc29uIjogIkNMSSBmbGFnIGJ1aWxkZXIgd2l0aCBhZGRpdGl2ZSBjb25kaXRpb25hbCBmbGFncyBwZXIgR3JhcGhpZnkgb3BlcmF0aW9uOyB3aWxsIGJlIGNvdmVyZWQgYnkgdGVzdHMgb25jZSB0aGUgdGVzdCBmcmFtZXdvcmsgaXMgaW50cm9kdWNlZC4iCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAiZmlsZXMiOiBbInNyYy9lcnJvcnMudHMiXSwKICAgICAgICAiZnVuY3Rpb25zIjogWyJjb2RlRm9yT3BlcmF0aW9uIl0sCiAgICAgICAgIm1heENyYXAiOiAxMjAsCiAgICAgICAgInJlYXNvbiI6ICJTaW1wbGUgb3BlcmF0aW9uLXRvLWVycm9yLWNvZGUgbWFwcGluZyBzd2l0Y2g7IGhpZ2ggQ1JBUCBpcyBkdWUgdG8gbGFjayBvZiB0ZXN0IGNvdmVyYWdlLCBub3Qgc3RydWN0dXJhbCBjb21wbGV4aXR5LiIKICAgICAgfQogICAgXQogIH0KfQo=
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": ["extensions/index.ts"],
+  "ignoreDependencies": ["chokidar"],
+  "health": {
+    "thresholdOverrides": [
+      {
+        "files": ["src/backends/cli.ts"],
+        "functions": ["buildArgs"],
+        "maxCrap": 600,
+        "reason": "CLI flag builder with additive conditional flags per Graphify operation; will be covered by tests once the test framework is introduced."
+      },
+      {
+        "files": ["src/errors.ts"],
+        "functions": ["codeForOperation"],
+        "maxCrap": 120,
+        "reason": "Simple operation-to-error-code mapping switch; high CRAP is due to lack of test coverage, not structural complexity."
+      }
+    ]
+  }
+}
