@@ -63,13 +63,27 @@ After installing, `graphify` should be available on your PATH. If it is not, add
 
 ## Build a graph for testing
 
-Phase 3 only adds the tools. The `/graphify-build` command is added in Phase 4, so for now build the graph directly with the Graphify CLI:
+Phase 3 only adds the tools. The `/graphify-build` command is added in Phase 4, so for now build the graph directly with the Graphify CLI.
+
+For a quick code-only graph that does not require an API key or extra dependencies, run:
+
+```bash
+graphify . --code-only
+```
+
+This creates a `graphify-out/` directory with `graph.json`, `graph.html`, and `GRAPH_REPORT.md`. The `--code-only` flag skips semantic extraction and only indexes code files, which is usually enough for testing `pi-graphify`.
+
+If you want semantic extraction (docs, images, etc.), you need the `kimi` backend dependencies. Install them with:
+
+```bash
+uv tool install "graphifyy[kimi]" --force
+```
+
+Then run the full build:
 
 ```bash
 graphify .
 ```
-
-This creates a `graphify-out/` directory with `graph.json`, `graph.html`, and `GRAPH_REPORT.md`.
 
 Once Phase 4 is complete, `/graphify-build` will be available as an alternative.
 
@@ -125,7 +139,8 @@ Or remove the package manually from Pi's package directory if you installed it l
 | `graphify` command not found after install | Ensure the tool bin directory is on your PATH. For `uv tool`, try `uv tool update-shell`. |
 | Pi does not load the extension | Run `pi --version` and confirm the package is listed in `pi packages`. Try `/reload`. |
 | Extension shows old version after changes | Run `pi install .` again, then start a fresh Pi session. |
-| `graphify_status` returns "No Graphify graph found" | Build the graph first with `graphify .` (the `/graphify-build` command is coming in Phase 4). |
+| `graphify_status` returns "No Graphify graph found" | Build the graph first with `graphify . --code-only`. |
+| Semantic extraction fails with `openai` package error | Run `graphify . --code-only` for a code-only graph, or install the `kimi` backend with `uv tool install "graphifyy[kimi]" --force`. |
 
 ## References
 
