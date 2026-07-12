@@ -7,7 +7,7 @@ Single source of truth for the phased development of `pi-graphify`. This documen
 - **Active phase:** 4 — Commands
 - **Last completed:** Phase 3 — Core tools
 - **Last updated:** 2026-07-12
-- **Next action:** Implement Phase 4 slash commands for core tools
+- **Next action:** Implement Phase 4 slash commands (pending explicit approval)
 - **Open questions:** None
 
 ## Roadmap
