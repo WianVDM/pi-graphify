@@ -36,18 +36,25 @@ When a graph is present, the extension also injects a lightweight hint into the 
 | Tool | Description |
 |---|---|
 | `graphify_status` | Check graph presence, path, and Graphify CLI compatibility. |
+| `graphify_build` | Build or incrementally update the Graphify knowledge graph. |
+| `graphify_query` | Ask a natural-language question against the graph. |
+| `graphify_path` | Find the shortest path between two graph nodes. |
+| `graphify_explain` | Explain a node and its connections in the graph. |
+| `graphify_affected` | Show the blast radius of changes to one or more files. |
+| `graphify_version` | Report the installed Graphify version and compatibility status. |
 
 ## What's coming
 
-More tools and commands are planned in upcoming phases:
+Slash commands for the tools above are planned in the next phase:
 
-- `/graphify-build` / `graphify_build`
-- `/graphify-query` / `graphify_query`
-- `/graphify-path` / `graphify_path`
-- `/graphify-explain` / `graphify_explain`
-- `/graphify-watch` / `graphify_watch`
+- `/graphify-build`
+- `/graphify-query`
+- `/graphify-path`
+- `/graphify-explain`
+- `/graphify-affected`
+- `/graphify-version`
 
-See [docs/DESIGN.md](docs/DESIGN.md) for the full roadmap and design principles.
+Later phases will add background file watching, MCP backend support, ecosystem integrations, and release readiness work. See [plan/PLAN.md](plan/PLAN.md) for the full roadmap.
 
 ## How it works
 
