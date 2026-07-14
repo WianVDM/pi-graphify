@@ -36,10 +36,11 @@ export const affectedCommand: CommandDefinition = {
   name: "graphify-affected",
   label: "Show affected",
   description: "Show files and nodes affected by changes to given files",
+  menuDescription: "Show files affected by changes",
   feature: FEATURE,
   usage: AFFECTED_USAGE,
   argMode: "input",
-  prompt: "Files to analyze",
+  prompt: "Enter file paths separated by spaces (e.g. src/index.ts src/utils.ts)",
   placeholder: "src/index.ts src/utils.ts",
   execute: executeAffected,
 };

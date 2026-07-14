@@ -35,10 +35,11 @@ export const pathCommand: CommandDefinition = {
   name: "graphify-path",
   label: "Find path",
   description: "Find the shortest path between two nodes in the graph",
+  menuDescription: "Find shortest path between nodes",
   feature: FEATURE,
   usage: PATH_USAGE,
   argMode: "input",
-  prompt: "Path source and target",
+  prompt: "Enter source and target nodes separated by a space (e.g. src/index.ts src/utils.ts)",
   placeholder: "src/index.ts src/utils.ts",
   execute: executePath,
 };

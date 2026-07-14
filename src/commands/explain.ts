@@ -39,10 +39,11 @@ export const explainCommand: CommandDefinition = {
   name: "graphify-explain",
   label: "Explain node",
   description: "Explain a node or concept in the graph",
+  menuDescription: "Explain a node or concept",
   feature: FEATURE,
   usage: "<node>",
   argMode: "input",
-  prompt: "Node to explain",
+  prompt: "Enter a node name (e.g. auth)",
   placeholder: "src/coordinator.ts:GraphifyCoordinator",
   execute: executeExplain,
 };

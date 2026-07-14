@@ -33,6 +33,7 @@ export const versionCommand: CommandDefinition = {
   name: "graphify-version",
   label: "Graphify version",
   description: "Show the installed Graphify CLI version",
+  menuDescription: "Show Graphify CLI version",
   feature: FEATURE,
   usage: "",
   argMode: "none",

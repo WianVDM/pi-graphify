@@ -122,7 +122,7 @@ export function buildMenuItems(availableCommands: CommandDefinition[]): SelectIt
   return availableCommands.map((command) => ({
     value: command.name,
     label: command.label,
-    description: command.description,
+    description: command.menuDescription ?? command.description,
   }));
 }
 
@@ -145,6 +145,11 @@ async function executeMenuChoice(
     selectedCommand.placeholder,
   );
   if (input === undefined) return;
+
+  if (selectedCommand.argMode === "input" && input.trim() === "") {
+    await selectedCommand.execute(ctx, getCoordinator, "");
+    return;
+  }
 
   await selectedCommand.execute(ctx, getCoordinator, input);
 }

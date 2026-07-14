@@ -39,10 +39,11 @@ export const queryCommand: CommandDefinition = {
   name: "graphify-query",
   label: "Query graph",
   description: "Ask a natural-language question against the graph",
+  menuDescription: "Ask a natural-language question",
   feature: FEATURE,
   usage: "<question>",
   argMode: "input",
-  prompt: "Question",
+  prompt: "Enter a natural-language question (e.g. how does auth work?)",
   placeholder: "What does this project do?",
   execute: executeQuery,
 };

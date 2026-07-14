@@ -45,10 +45,11 @@ export const buildCommand: CommandDefinition = {
   name: "graphify-build",
   label: "Build graph",
   description: "Build or incrementally update the Graphify knowledge graph",
+  menuDescription: "Build or update the graph",
   feature: FEATURE,
   usage: BUILD_USAGE,
   argMode: "flags",
-  prompt: "Build graph (optional flags)",
+  prompt: "Build options (e.g. --code-only --update --directed; leave blank for defaults)",
   placeholder: "--code-only --update --directed",
   execute: executeBuild,
 };

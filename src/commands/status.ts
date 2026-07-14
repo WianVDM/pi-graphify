@@ -32,6 +32,7 @@ export const statusCommand: CommandDefinition = {
   name: "graphify-status",
   label: "Graph status",
   description: "Show whether a Graphify knowledge graph exists for this project",
+  menuDescription: "Check graph status",
   feature: FEATURE,
   usage: "",
   argMode: "none",

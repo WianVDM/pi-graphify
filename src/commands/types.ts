@@ -45,6 +45,9 @@ export interface CommandDefinition {
   /** Description shown in the menu and in Pi's command list. */
   description: string;
 
+  /** Short description shown in the unified /graphify menu overlay. */
+  menuDescription?: string;
+
   /** Required Graphify capability. */
   feature: keyof GraphifyCapabilities;
 
