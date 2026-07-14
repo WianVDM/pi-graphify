@@ -148,49 +148,86 @@ function findOnPath(command: string): Promise<string | null> {
 }
 
 /** Build a CLI argument array from an operation and options. */
-function buildArgs(operation: string, options: unknown): string[] {
+export function buildArgs(operation: string, options: unknown): string[] {
   if (!options || typeof options !== "object") {
-    return [operation];
+    return operation === "build" ? ["."] : [operation];
   }
 
   const opts = options as Record<string, unknown>;
-  const args = [operation];
 
-  if (opts.cwd && typeof opts.cwd === "string") {
-    // graphify commands operate on cwd via the spawned process working directory;
-    // no explicit flag is needed for most operations.
-  }
-
-  if (opts.codeOnly === true) args.push("--code-only");
-  if (opts.update === true) args.push("--update");
-  if (opts.directed === true) args.push("--directed");
-
-  if (opts.question && typeof opts.question === "string") {
-    args.push(opts.question);
-  }
-  if (opts.source && typeof opts.source === "string") {
-    args.push("--source", opts.source);
-  }
-  if (opts.target && typeof opts.target === "string") {
-    args.push("--target", opts.target);
-  }
-  if (opts.node && typeof opts.node === "string") {
-    args.push("--node", opts.node);
-  }
-  if (Array.isArray(opts.files)) {
-    for (const file of opts.files) {
-      if (typeof file === "string") args.push(file);
+  switch (operation) {
+    case "build": {
+      const args = ["."];
+      if (opts.codeOnly === true) args.push("--code-only");
+      if (opts.update === true) args.push("--update");
+      if (opts.directed === true) args.push("--directed");
+      return args;
     }
-  }
-  if (Array.isArray(opts.paths)) {
-    for (const p of opts.paths) {
-      if (typeof p === "string") {
-        args.push(resolve(p));
+    case "query": {
+      const args = ["query"];
+      if (opts.question && typeof opts.question === "string") {
+        args.push(opts.question);
       }
+      return args;
+    }
+    case "path": {
+      const args = ["path"];
+      if (opts.source && typeof opts.source === "string") {
+        args.push(opts.source);
+      }
+      if (opts.target && typeof opts.target === "string") {
+        args.push(opts.target);
+      }
+      return args;
+    }
+    case "explain": {
+      const args = ["explain"];
+      if (opts.node && typeof opts.node === "string") {
+        args.push(opts.node);
+      }
+      return args;
+    }
+    case "affected": {
+      const args = ["affected"];
+      if (Array.isArray(opts.files)) {
+        for (const file of opts.files) {
+          if (typeof file === "string") args.push(file);
+        }
+      }
+      return args;
+    }
+    default: {
+      const args = [operation];
+      if (opts.codeOnly === true) args.push("--code-only");
+      if (opts.update === true) args.push("--update");
+      if (opts.directed === true) args.push("--directed");
+      if (opts.question && typeof opts.question === "string") {
+        args.push(opts.question);
+      }
+      if (opts.source && typeof opts.source === "string") {
+        args.push("--source", opts.source);
+      }
+      if (opts.target && typeof opts.target === "string") {
+        args.push("--target", opts.target);
+      }
+      if (opts.node && typeof opts.node === "string") {
+        args.push("--node", opts.node);
+      }
+      if (Array.isArray(opts.files)) {
+        for (const file of opts.files) {
+          if (typeof file === "string") args.push(file);
+        }
+      }
+      if (Array.isArray(opts.paths)) {
+        for (const p of opts.paths) {
+          if (typeof p === "string") {
+            args.push(resolve(p));
+          }
+        }
+      }
+      return args;
     }
   }
-
-  return args;
 }
 
 /** Create a CLI backend and initialize it. */
