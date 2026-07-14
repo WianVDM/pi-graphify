@@ -1,6 +1,6 @@
 {
   "name": "@wwjd/pi-graphify",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Graphify knowledge graph integration for Pi coding agent",
   "type": "module",
   "license": "MIT",

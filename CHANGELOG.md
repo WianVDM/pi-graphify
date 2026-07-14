@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3](https://github.com/WianVDM/pi-graphify/compare/pi-graphify-v0.4.2...pi-graphify-v0.4.3) (2026-07-14)
+
+
+### Bug Fixes
+
+* **cli:** invoke graphify build/path/explain with correct CLI syntax ([3eafade](https://github.com/WianVDM/pi-graphify/commit/3eafadef91a7b0201f00b1c102431202d16fc957))
+
 ## [0.4.2](https://github.com/WianVDM/pi-graphify/compare/pi-graphify-v0.4.1...pi-graphify-v0.4.2) (2026-07-14)
 
 
