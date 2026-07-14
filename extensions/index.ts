@@ -20,18 +20,25 @@ export default function (pi: ExtensionAPI) {
   let coordinator: GraphifyCoordinator | null = null;
   const getCoordinator = () => coordinator;
   const registeredToolNames = new Set<string>();
+  let commandsRegistered = false;
 
-  // ── 1. Register slash commands synchronously ─────────────────────
-  registerGraphifyCommands(pi, getCoordinator);
-  registerGraphifyMenuCommand(pi, getCoordinator);
-
-  // ── 2. Initialize coordinator and register tools per session ───────
-  // Tools are registered inside session_start so we can gate them by the
-  // coordinator's detected capabilities. Registering at load time would mean
-  // the LLM sees tools that may not be supported by the installed Graphify version.
+  // ── 1. Initialize coordinator and register tools per session ───────
+  // Tools and commands are registered inside session_start so we can gate them
+  // by the coordinator's detected capabilities and the current run mode.
+  // Commands are mode-specific: the unified /graphify menu is shown in TUI;
+  // individual /graphify-* commands are shown in non-TUI modes.
   pi.on("session_start", async (_event, ctx) => {
     coordinator = new GraphifyCoordinator({ cwd: ctx.cwd });
     await coordinator.initialize();
+
+    if (!commandsRegistered) {
+      commandsRegistered = true;
+      if (ctx.mode === "tui") {
+        registerGraphifyMenuCommand(pi, getCoordinator);
+      } else {
+        registerGraphifyCommands(pi, getCoordinator);
+      }
+    }
 
     registerGraphifyTools(pi, getCoordinator, { registeredToolNames });
 

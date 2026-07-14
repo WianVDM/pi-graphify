@@ -121,8 +121,10 @@ Add user-facing slash commands for every core tool so interactive users can invo
   - [x] Iterate over `graphifyCommands` and call `pi.registerCommand(def.name, { description: def.description, handler: (args, ctx) => def.execute(ctx, getCoordinator, args) })`
 - [x] Update `extensions/index.ts`
   - [x] Remove the inline `/graphify-status` registration
-  - [x] Import and call `registerGraphifyCommands` and `registerGraphifyMenuCommand` at extension load time
-  - [x] Keep `getCoordinator` closure shared with tools
+  - [x] Register commands inside `session_start` so the current `ctx.mode` is known
+  - [x] In non-TUI modes, import and call `registerGraphifyCommands`
+  - [x] Keep `getCoordinator` closure shared with tools and the menu
+  - [x] Guard against duplicate command registration across multiple `session_start` events
 
 ### 5. Implement `/graphify` unified menu
 
@@ -140,6 +142,7 @@ Add user-facing slash commands for every core tool so interactive users can invo
   - [x] Handle cancellation (Esc / null) by closing without action
   - [x] Use `DynamicBorder`, `Container`, `Text`, and `SelectList` with theme-aware styling
   - [x] Export `buildMenuItems(commands)` for testing
+- [x] In `extensions/index.ts`, register the menu command only in TUI mode; individual commands are registered in non-TUI modes
 
 ### 6. Capability and state checks in handlers
 
@@ -183,10 +186,12 @@ Add user-facing slash commands for every core tool so interactive users can invo
 
 - [x] `npm run typecheck` passes
 - [x] `npm run lint` passes
-- [x] All commands are registered in `extensions/index.ts`
+- [x] In TUI mode, only `/graphify` is registered; individual commands are hidden
+- [x] In non-TUI modes, only individual `/graphify-*` commands are registered; `/graphify` is hidden
+- [x] Commands are registered inside `extensions/index.ts` based on `ctx.mode`
 - [x] `/graphify` menu works in TUI mode
 - [x] `/graphify` menu falls back gracefully in non-TUI modes
-- [x] Individual commands can still be invoked directly
+- [x] Individual commands can still be invoked directly in non-TUI modes
 - [x] Commands route through `GraphifyCoordinator`
 - [x] Commands produce clear, actionable UI output
 - [x] Invalid arguments are handled with usage hints
@@ -217,14 +222,16 @@ Add user-facing slash commands for every core tool so interactive users can invo
 - Commands calling `pi.runTool` internally. Rejected because it introduces unnecessary indirection and would require the tool to be registered.
 - Commands reimplementing backend logic. Rejected because it duplicates code and risks divergence.
 
-### 2. Commands are registered synchronously at extension load time
+### 2. Commands are registered inside `session_start` and gated by mode
 
-**Decision:** `pi.registerCommand` is called during the extension factory execution, not inside `session_start`.
+**Decision:** Commands are registered when the first `session_start` fires, not at extension load time. In TUI mode, only the unified `/graphify` menu command is registered. In non-TUI modes (RPC, JSON, print), only the individual `/graphify-*` commands are registered.
 
-**Why:** Pi expects slash commands to be available immediately when the extension loads. The command handler captures the `getCoordinator` closure, so it always sees the coordinator initialized by the latest `session_start`.
+**Why:** Pi lists every registered command in the command surface. Registering both the menu and the individual commands at load time made the TUI command list noisy. By registering at `session_start`, the extension knows the current `ctx.mode` and can present the right surface for that environment. TUI users get a single menu entry; non-TUI users get direct access to each command.
 
 **Alternatives considered:**
-- Registering commands inside `session_start`. Rejected because commands may not appear until a session starts, which is inconsistent with Pi's command surface.
+- Registering all commands at load time and hiding them via the handler. Rejected because the handler has no control over whether the command appears in the command list.
+- Registering only `/graphify` in all modes. Rejected because non-TUI clients cannot open the overlay/selector menu, so users would have no way to invoke the individual operations.
+- Keeping commands registered at load time but using a different naming convention. Rejected because it would still pollute the command list in TUI mode.
 
 ### 3. Capability checks happen in command executors
 
